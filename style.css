@@ -1350,7 +1350,7 @@ function initScrollAnimations() {
   margin-bottom: 4px;
 }
 
-.stat-number::after {
+.stat-number.plus::after {
   content: '+';
   -webkit-text-fill-color: inherit;
 }
@@ -1411,7 +1411,7 @@ function initScrollAnimations() {
 
 .links-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding-bottom: 20px;
 }
