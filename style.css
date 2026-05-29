@@ -137,6 +137,7 @@ body {
   align-items: center;
   z-index: 100;
   mix-blend-mode: difference;
+  opacity: 0;
 }
 
 .nav-logo {

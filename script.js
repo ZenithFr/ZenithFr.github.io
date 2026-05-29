@@ -3,13 +3,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Initialize Lenis for smooth scrolling
 const lenis = new Lenis({
-  duration: 1.2,
+  duration: 2,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
   direction: 'vertical',
   gestureDirection: 'vertical',
   smooth: true,
   mouseMultiplier: 1,
-  smoothTouch: false,
+  smoothTouch: true,
   touchMultiplier: 2,
   infinite: false,
 });
@@ -101,7 +101,7 @@ const interval = setInterval(() => {
     })
     .fromTo(".hero-title .char", 
       { y: "100%" }, 
-      { y: "0%", stagger: 0.05, duration: 1, ease: "power4.out" },
+      { y: "0%", stagger: 0.05, duration: 2, ease: "elastic.out(1.1,0.75)" },
       "-=0.5"
     )
     .to(".hero-subtitle, .scroll-indicator, .navbar", {
@@ -109,7 +109,7 @@ const interval = setInterval(() => {
       y: 0,
       duration: 1,
       stagger: 0.2,
-      ease: "power3.out"
+      ease: "elastic.out(1,1)"
     }, "-=0.5");
   }
 }, 30);
@@ -122,10 +122,10 @@ sections.forEach((sec) => {
     opacity: 0,
     duration: 1,
     stagger: 0.1,
-    ease: "power3.out",
+    ease: "elastic.out(0.80,0.75)",
     scrollTrigger: {
       trigger: sec,
-      start: "top 80%",
+      start: "top 30%",
     }
   });
 });
