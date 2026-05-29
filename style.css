@@ -35,6 +35,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* Hide the native cursor on devices with a mouse/pointer */
+@media (pointer: fine) {
+  html, 
+  body, 
+  a, 
+  button, 
+  .magnetic, 
+  .btn, 
+  .link-card {
+    cursor: none !important;
+  }
+}
 
 /* CUSTOM CURSOR */
 .cursor {

@@ -85,8 +85,11 @@ const interval = setInterval(() => {
     const tl = gsap.timeline({
       onComplete: () => {
         document.body.style.overflow = '';
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+          heroTitle.style.overflow = 'visible';
       }
-    });
+    }});
     
     tl.to(".loader-content", {
       opacity: 0,
@@ -199,5 +202,30 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (targetElement) {
       lenis.scrollTo(targetElement);
     }
+  });
+});
+// Hero Title Characters Hover Interaction
+const heroChars = document.querySelectorAll('.hero-title .char');
+
+heroChars.forEach((char) => {
+  // We apply cursor pointer to individual letters for clarity
+  char.style.cursor = 'pointer';
+
+  char.addEventListener('mouseenter', () => {
+    gsap.to(char, {
+      y: "-15%",          // Moves the letter slightly up (proportional to font-size)
+      scale: 1.08,        // Slight scale up
+      duration: 1,
+      ease: "power4.out"
+    });
+  });
+
+  char.addEventListener('mouseleave', () => {
+    gsap.to(char, {
+      y: "0%",
+      scale: 1,
+      duration: 1.5,
+      ease: "elastic.out(1.2, 0.5)" // Springy rebound matching the rest of the site
+    });
   });
 });
