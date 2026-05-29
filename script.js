@@ -225,7 +225,7 @@ heroChars.forEach((char) => {
       y: "0%",
       scale: 1,
       duration: 1.5,
-      ease: "elastic.out(1.2, 0.5)" // Springy rebound matching the rest of the site
+      ease: "elastic.out(1, 0.75)" // Springy rebound matching the rest of the site
     });
   });
 });

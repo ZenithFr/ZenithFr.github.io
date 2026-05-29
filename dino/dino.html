@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dino Run — Easter Egg</title>
+  <meta name="description" content="A sleek, minimalist vector-style runner game designed with the Zenith aesthetic." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="dino.css" />
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <!-- NAVIGATION BACK TO PORTFOLIO -->
+  <nav class="navbar">
+    <a href="../index.html" class="back-link">
+      <span class="arrow">←</span> Return Home
+    </a>
+  </nav>
+
+  <!-- MAIN GAME WRAPPER -->
+  <main class="game-wrapper">
+    <div class="game-layout" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 800px;">
+      
+      <!-- LEADERBOARD CONTAINER -->
+      <div class="leaderboard-container glass-card">
+        <h3 class="leaderboard-title">SYSTEM LEADERBOARD</h3>
+        <div id="leaderboard-list" class="leaderboard-list">
+          <!-- Rendered dynamically by dino.js -->
+        </div>
+      </div>
+
+      <!-- GAME CONTAINER -->
+      <div class="game-container">
+        <!-- HUD / SCOREBOARD -->
+        <div class="hud">
+          <div class="score-box">
+            <span class="score-label">SCORE</span>
+            <span id="score-val" class="score-num">00000</span>
+          </div>
+          <div class="score-box">
+            <span class="score-label">BEST</span>
+            <span id="highscore-val" class="score-num">00000</span>
+          </div>
+        </div>
+
+        <!-- CANVAS -->
+        <canvas id="game-canvas" width="800" height="450"></canvas>
+
+        <!-- OVERLAYS (Glassmorphism Cards) -->
+        <!-- START OVERLAY -->
+        <div id="start-overlay" class="overlay glass-card">
+          <h1 class="game-title">ZENITH<span>RUN</span></h1>
+          <p class="subtitle">Navigate the digital void. Input your handle to register your system.</p>
+          
+          <!-- USERNAME INPUT -->
+          <div class="input-group">
+            <input type="text" id="username-input" placeholder="ENTER HANDLE" maxlength="10" autocomplete="off" />
+          </div>
+
+          <div class="controls-guide">
+            <div class="control-key"><span>SPACE</span> or <span>↑</span> to Jump</div>
+            <div class="control-key"><span>↓</span> or <span>SHIFT</span> to Duck</div>
+          </div>
+          <button id="start-btn" class="btn">Initialize Run</button>
+        </div>
+
+        <!-- GAME OVER OVERLAY -->
+        <div id="gameover-overlay" class="overlay glass-card hidden">
+          <h2 class="gameover-title">RUN TERMINATED</h2>
+          <div class="stat-row">
+            <span class="stat-name">Final Score</span>
+            <span id="final-score" class="stat-value">0</span>
+          </div>
+          <button id="restart-btn" class="btn">Reinitialize System</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="dino.js"></script>
+</body>
+</html>
