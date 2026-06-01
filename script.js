@@ -275,18 +275,18 @@ const particles = new THREE.Points(geometry, material);
 scene.add(particles);
 
 // Mouse interaction for particles
-let mouseX = 0;
-let mouseY = 0;
+let particleMouseX = 0;
+let particleMouseY = 0;
 document.addEventListener('mousemove', (e) => {
-  mouseX = (e.clientX - window.innerWidth / 2) * 0.5;
-  mouseY = (e.clientY - window.innerHeight / 2) * 0.5;
+  particleMouseX = (e.clientX - window.innerWidth / 2) * 0.5;
+  particleMouseY = (e.clientY - window.innerHeight / 2) * 0.5;
 });
 
 function animateThree() {
   requestAnimationFrame(animateThree);
   
-  camera.position.x += ( mouseX - camera.position.x ) * 0.05;
-  camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
+  camera.position.x += ( particleMouseX - camera.position.x ) * 0.05;
+  camera.position.y += ( - particleMouseY - camera.position.y ) * 0.05;
   camera.lookAt(scene.position);
   
   particles.rotation.y += 0.001;
@@ -619,7 +619,7 @@ if (marketplaceGrid) {
 
     const originalHtml = btn.innerHTML;
     btn.classList.add('downloading');
-    btn.innerHTML = \`<div class="dl-progress-bar"></div><span class="dl-text">Compiling 0%</span>\`;
+    btn.innerHTML = `<div class="dl-progress-bar"></div><span class="dl-text">Compiling 0%</span>`;
     const progressBar = btn.querySelector('.dl-progress-bar');
     const progressText = btn.querySelector('.dl-text');
 
@@ -630,10 +630,10 @@ if (marketplaceGrid) {
     worker.onmessage = function(e) {
       if (e.data.type === 'progress') {
         const percent = Math.floor(e.data.percent);
-        gsap.to(progressBar, { width: \`\${percent}%\`, duration: 0.1 });
-        progressText.innerText = \`Compiling \${percent}%\`;
+        gsap.to(progressBar, { width: `${percent}%`, duration: 0.1 });
+        progressText.innerText = `Compiling ${percent}%`;
       } else if (e.data.type === 'done') {
-        window.saveAs(e.data.content, \`\${skillKey}.zip\`);
+        window.saveAs(e.data.content, `${skillKey}.zip`);
         cleanup(true);
       } else if (e.data.type === 'error') {
         console.error('Download failed:', e.data.error);
