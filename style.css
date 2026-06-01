@@ -187,21 +187,33 @@ body {
 
 .hero-content {
   text-align: center;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+body.bw-active .hero-content {
+  transform: translateY(-8vh);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 15vw, 12rem);
+  font-size: clamp(3rem, 10vw, 8rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
+  text-transform: uppercase;
   overflow: hidden;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hero-title .char {
   display: inline-block;
   transform: translateY(100%);
+}
+
+body.bw-active .hero-title .char {
+  transform: translateY(0) !important;
 }
 
 .hero-subtitle {
@@ -1014,11 +1026,13 @@ body {
    THEME SWITCH OVERRIDES
    ========================================== */
 
-body {
+main, nav, #webgl-canvas {
   transition: filter 0.5s ease;
 }
 
-body.bw-active {
+body.bw-active main,
+body.bw-active nav,
+body.bw-active #webgl-canvas {
   filter: grayscale(100%);
 }
 
