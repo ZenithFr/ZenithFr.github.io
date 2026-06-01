@@ -1048,7 +1048,8 @@ body.bw-active .bw-alt {
   display: inline-block !important;
 }
 
-body.bw-active div.bw-alt {
+body.bw-active div.bw-alt,
+body.bw-active p.bw-alt {
   display: block !important;
 }
 
