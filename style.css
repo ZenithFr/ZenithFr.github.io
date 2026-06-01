@@ -557,8 +557,8 @@ body {
 /* TECH STACK ROW */
 .tech-stack-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5rem;
   margin-top: 1.5rem;
 }
 
@@ -596,12 +596,12 @@ body {
 
 .stack-item span {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--text-muted);
-  margin-top: 0.8rem;
-  transition: color 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-align: center;
+  margin-top: 1rem;
+  white-space: nowrap;
 }
 
 .stack-icon-wrapper {
