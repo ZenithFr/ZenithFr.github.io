@@ -699,12 +699,16 @@ function scrambleText(targetWord, duration = 500) {
     }
     
     // Wrap in .char spans to maintain formatting
-    heroTitle.innerHTML = scrambled.split('').map(c => '<span class="char">' + c + '</span>').join('');
+    heroTitle.innerHTML = scrambled.split('').map(c => {
+      return c === ' ' ? '<span class="char">&nbsp;</span>' : '<span class="char">' + c + '</span>';
+    }).join('');
     
     iterations++;
     if (iterations >= maxIterations) {
       clearInterval(scrambleInterval);
-      heroTitle.innerHTML = targetWord.split('').map(c => '<span class="char">' + c + '</span>').join('');
+      heroTitle.innerHTML = targetWord.split('').map(c => {
+        return c === ' ' ? '<span class="char">&nbsp;</span>' : '<span class="char">' + c + '</span>';
+      }).join('');
     }
   }, 50);
 }
