@@ -31,8 +31,36 @@ let screenshake = 0;
 
 // Update Custom Cursor Tracking
 const cursor = document.querySelector('.cursor');
+const cursorRing = document.createElement('div');
+cursorRing.className = 'cursor-ring';
+document.body.appendChild(cursorRing);
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let ringX = mouseX;
+let ringY = mouseY;
+
 document.addEventListener('mousemove', (e) => {
-  cursor.style.transform = `translate3d(${e.clientX - 10}px, ${e.clientY - 10}px, 0)`;
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+});
+
+function animateCursor() {
+  ringX += (mouseX - ringX) * 0.18;
+  ringY += (mouseY - ringY) * 0.18;
+  cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.addEventListener('mousedown', () => {
+  cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) scale(0.5)`;
+  cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(0.8)`;
+});
+document.addEventListener('mouseup', () => {
+  cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) scale(1)`;
+  cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(1)`;
 });
 
 // Dynamic Physics Settings
