@@ -621,7 +621,7 @@ if (marketplaceGrid) {
     const workerCode = \`
       importScripts('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
       self.onmessage = async function(e) {
-        const { skillKey, files } = e.data;
+        const { skillKey, files, baseUrl } = e.data;
         const zip = new JSZip();
         const folder = zip.folder(skillKey);
         
@@ -630,7 +630,7 @@ if (marketplaceGrid) {
           const total = files.length;
           
           const fetchPromises = files.map(async (fileName) => {
-            const fileUrl = '../assets/lab/hermes-skills/' + skillKey + '/' + fileName;
+            const fileUrl = baseUrl + skillKey + '/' + fileName;
             const response = await fetch(fileUrl);
             if (!response.ok) throw new Error('Failed to fetch ' + fileName);
             const blob = await response.blob();
@@ -692,6 +692,8 @@ if (marketplaceGrid) {
       }, 2000);
     }
 
-    worker.postMessage({ skillKey, files });
+    // Safely calculate the absolute base URL based on the current page's origin to avoid Blob URL CORS mapping issues
+    const baseUrl = new URL('../assets/lab/hermes-skills/', window.location.href).href;
+    worker.postMessage({ skillKey, files, baseUrl });
   };
 }
