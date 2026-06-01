@@ -665,3 +665,81 @@ if (marketplaceGrid) {
     worker.postMessage({ skillKey, files, baseUrl });
   };
 }
+
+// ==========================================
+// GLITCH MODE LOGIC
+// ==========================================
+const glitchToggle = document.getElementById('glitch-toggle');
+const heroTitle = document.querySelector('.hero-title');
+const originalTitleHTML = heroTitle.innerHTML;
+
+const glitchWords = ['zenith', 'THANTHA', 'INSANE', 'LOWRES', 'RYUKO', 'GXM', 'I SEE YOU'];
+let glitchActive = false;
+let currentWordIndex = 0;
+let glitchTimeout;
+let scrambleInterval;
+
+const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
+
+function scrambleText(targetWord, duration = 500) {
+  let iterations = 0;
+  const maxIterations = duration / 50;
+  
+  clearInterval(scrambleInterval);
+  scrambleInterval = setInterval(() => {
+    let scrambled = '';
+    for (let i = 0; i < targetWord.length; i++) {
+      if (targetWord[i] === ' ') {
+        scrambled += ' ';
+      } else if (iterations > maxIterations * (i / targetWord.length)) {
+        scrambled += targetWord[i];
+      } else {
+        scrambled += characters[Math.floor(Math.random() * characters.length)];
+      }
+    }
+    
+    // Wrap in .char spans to maintain formatting
+    heroTitle.innerHTML = scrambled.split('').map(c => '<span class="char">' + c + '</span>').join('');
+    
+    iterations++;
+    if (iterations >= maxIterations) {
+      clearInterval(scrambleInterval);
+      heroTitle.innerHTML = targetWord.split('').map(c => '<span class="char">' + c + '</span>').join('');
+    }
+  }, 50);
+}
+
+function nextGlitchWord() {
+  if (!glitchActive) return;
+  
+  const word = glitchWords[currentWordIndex];
+  scrambleText(word, 600);
+  
+  let delay = 3000;
+  if (word === 'I SEE YOU') {
+    delay = 10000;
+  }
+  
+  glitchTimeout = setTimeout(() => {
+    currentWordIndex++;
+    if (currentWordIndex >= glitchWords.length) {
+      currentWordIndex = 0;
+    }
+    nextGlitchWord();
+  }, delay);
+}
+
+glitchToggle.addEventListener('click', () => {
+  glitchActive = !glitchActive;
+  document.body.classList.toggle('glitch-active', glitchActive);
+  
+  if (glitchActive) {
+    currentWordIndex = 0;
+    nextGlitchWord();
+  } else {
+    // Reset
+    clearTimeout(glitchTimeout);
+    clearInterval(scrambleInterval);
+    heroTitle.innerHTML = originalTitleHTML;
+  }
+});
