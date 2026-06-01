@@ -1036,6 +1036,26 @@ body.bw-active #webgl-canvas {
   filter: grayscale(100%);
 }
 
+.bw-alt {
+  display: none !important;
+}
+
+body.bw-active .bw-default {
+  display: none !important;
+}
+
+body.bw-active .bw-alt {
+  display: inline-block !important;
+}
+
+body.bw-active div.bw-alt {
+  display: block !important;
+}
+
+body.bw-active .skills-grid.bw-alt {
+  display: flex !important;
+}
+
 .theme-switch {
   position: fixed;
   bottom: 20px;
