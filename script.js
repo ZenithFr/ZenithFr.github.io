@@ -1,3 +1,6 @@
+// ==========================================
+// 1. GLOBAL SETUP (GSAP & Lenis)
+// ==========================================
 // Register GSAP Plugins
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +23,10 @@ function raf(time) {
 }
 requestAnimationFrame(raf);
 
-// Custom Cursor
+// ==========================================
+// 2. CUSTOM CURSOR
+// ==========================================
+// Follows mouse and handles click animations
 const cursor = document.querySelector('.cursor');
 document.addEventListener('mousemove', (e) => {
   gsap.to(cursor, {
@@ -38,7 +44,10 @@ document.addEventListener('mouseup', () => {
   gsap.to(cursor, { scale: 1, duration: 0.2 });
 });
 
-// Magnetic Buttons
+// ==========================================
+// 3. MAGNETIC BUTTONS
+// ==========================================
+// Attracts specific buttons towards the cursor on hover
 const magneticElements = document.querySelectorAll('.magnetic');
 magneticElements.forEach((elem) => {
   elem.addEventListener('mousemove', (e) => {
@@ -64,7 +73,10 @@ magneticElements.forEach((elem) => {
   });
 });
 
-// Loading Animation
+// ==========================================
+// 4. LOADING SCREEN & HERO REVEAL
+// ==========================================
+// Handles the fake loading progress and animates hero intro
 const loaderProgress = document.getElementById('loader-progress-fill');
 const loaderPercent = document.getElementById('loader-percent');
 let progress = 0;
@@ -206,7 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Three.js Background Canvas (Lightweight Particles)
+// ==========================================
+// 6. THREE.JS BACKGROUND
+// ==========================================
+// Lightweight particle network acting as a subtle background
 const canvas = document.getElementById('webgl-canvas');
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x050505, 0.002);
@@ -266,7 +281,10 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Smooth anchor scrolling integrated with Lenis
+// ==========================================
+// 7. SMOOTH SCROLLING NAV
+// ==========================================
+// Intercepts anchor links and routes them through Lenis for smoothness
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
@@ -489,7 +507,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 100);
 });
 
-// Hermes Skills Marketplace Generator
+// ==========================================
+// 10. HERMES SKILLS MARKETPLACE DYNAMIC GENERATOR
+// ==========================================
+// Renders the skill cards and handles JSZip compression & download
 const marketplaceGrid = document.getElementById('skills-grid');
 if (marketplaceGrid) {
   const skills = [
