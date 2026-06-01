@@ -493,55 +493,76 @@ document.addEventListener('DOMContentLoaded', () => {
 const marketplaceGrid = document.getElementById('skills-grid');
 if (marketplaceGrid) {
   const skills = [
-    { id: 'ares-persona', icon: 'fa-solid fa-brain' },
-    { id: 'audit-approval-bypass', icon: 'fa-solid fa-shield-halved' },
-    { id: 'audit-mcp', icon: 'fa-solid fa-shield' },
-    { id: 'coinmaxxing', icon: 'fa-solid fa-coins' },
-    { id: 'docker-management', icon: 'fa-brands fa-docker' },
-    { id: 'duckduckgo-search', icon: 'fa-solid fa-magnifying-glass' },
-    { id: 'hermes-agent', icon: 'fa-solid fa-robot' },
-    { id: 'hermes-gateway-deploy', icon: 'fa-solid fa-bolt' },
-    { id: 'hermes-local-auxiliary', icon: 'fa-solid fa-microchip' },
-    { id: 'hermes-skin-authoring', icon: 'fa-solid fa-terminal' },
-    { id: 'lonepirate', icon: 'fa-solid fa-skull-crossbones' }
+    { id: 'ares-persona', icon: 'fa-solid fa-brain', files: ['SKILL.md', 'references/audit-log.md'] },
+    { id: 'audit-approval-bypass', icon: 'fa-solid fa-shield-halved', files: ['SKILL.md', 'references/audit-guide.md'] },
+    { id: 'audit-mcp', icon: 'fa-solid fa-shield', files: ['SKILL.md', 'references/audit-checklist.md'] },
+    { id: 'coinmaxxing', icon: 'fa-solid fa-coins', files: ['SKILL.md'] },
+    { id: 'docker-management', icon: 'fa-brands fa-docker', files: ['SKILL.md'] },
+    { id: 'duckduckgo-search', icon: 'fa-solid fa-magnifying-glass', files: ['SKILL.md', 'scripts/duckduckgo.sh'] },
+    { id: 'hermes-agent', icon: 'fa-solid fa-robot', files: ['SKILL.md', 'references/fallback-providers.md', 'references/optimization-guide.md'] },
+    { id: 'hermes-gateway-deploy', icon: 'fa-solid fa-bolt', files: ['SKILL.md'] },
+    { id: 'hermes-local-auxiliary', icon: 'fa-solid fa-microchip', files: ['SKILL.md', 'references/freellmapi-integration.md', 'references/hermes-aux-config.md', 'references/model-switching-workflow.md', 'references/server-config.md'] },
+    { id: 'hermes-skin-authoring', icon: 'fa-solid fa-terminal', files: ['SKILL.md'] },
+    { id: 'lonepirate', icon: 'fa-solid fa-skull-crossbones', files: ['SKILL.md'] }
   ];
 
   skills.forEach(skill => {
     const title = skill.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
-    // As per user, folders are pre-zipped locally so download directly from relative path
-    const downloadPath = `../assets/Lab/zips/${skill.id}.zip`;
-    
     const card = document.createElement('div');
-    card.className = 'skill-card';
+    card.className = 'skill-card magnetic';
+    card.setAttribute('data-strength', '5');
     card.innerHTML = `
       <div class="skill-header">
         <div class="skill-icon">
-          <i class="${skill.icon} fa-fw"></i>
+          <i class="${skill.icon} fa-fw fa-xl"></i>
         </div>
         <div class="skill-info">
           <h3>${title}</h3>
-          <p>${skill.id}/</p>
+          <p>pkg: ${skill.id}</p>
         </div>
       </div>
       <div class="skill-actions">
-        <a href="${downloadPath}" download class="btn-download" onclick="startDownload(this, event)">
+        <button class="btn-download" onclick="downloadSkillAsZip(this, '${skill.id}')">
           <i class="fa-solid fa-download"></i> Download Zip
-        </a>
+        </button>
       </div>
     `;
     marketplaceGrid.appendChild(card);
   });
-}
 
-// Download button micro-interaction
-window.startDownload = function(btn, e) {
-  // Prevent actual navigation/download in the editor if testing, but since it's an a tag with download attribute, the browser handles it.
-  const originalHtml = btn.innerHTML;
-  btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Downloading...`;
-  
-  // Revert back after a simulated delay so the user knows it was clicked
-  setTimeout(() => {
-    btn.innerHTML = originalHtml;
-  }, 2000);
+  window.downloadSkillAsZip = async function(btn, skillKey) {
+    const skill = skills.find(s => s.id === skillKey);
+    if (!skill) return;
+    const files = skill.files;
+
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Downloading...`;
+    btn.style.pointerEvents = 'none';
+
+    const zip = new window.JSZip();
+    const folder = zip.folder(skillKey);
+
+    try {
+      const fetchPromises = files.map(async (fileName) => {
+        // Fetch directly from github bypassing CORS limitations via jsDelivr
+        const fileUrl = `https://cdn.jsdelivr.net/gh/ZenithFr/ZenithFr.github.io@main/assets/lab/hermes-skills/${skillKey}/${fileName}`;
+        const response = await fetch(fileUrl);
+        if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
+        
+        const blob = await response.blob();
+        folder.file(fileName, blob);
+      });
+
+      await Promise.all(fetchPromises);
+      const content = await zip.generateAsync({ type: 'blob' });
+      window.saveAs(content, `${skillKey}.zip`);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Failed to stream and pack files from GitHub.');
+    } finally {
+      btn.innerHTML = originalHtml;
+      btn.style.pointerEvents = 'auto';
+    }
+  };
 }
