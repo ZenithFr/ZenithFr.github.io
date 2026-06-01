@@ -212,6 +212,10 @@ body.glitch-active .hero-content {
   transform: translateY(100%);
 }
 
+body.glitch-active .hero-title .char {
+  transform: translateY(0) !important;
+}
+
 .hero-subtitle {
   margin-top: 2rem;
   font-family: var(--font-mono);
