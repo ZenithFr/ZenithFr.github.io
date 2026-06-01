@@ -24,24 +24,37 @@ function raf(time) {
 requestAnimationFrame(raf);
 
 // ==========================================
-// 2. CUSTOM CURSOR
+// 2. CUSTOM CURSOR & KINETIC TRAILING
 // ==========================================
-// Follows mouse and handles click animations
 const cursor = document.querySelector('.cursor');
+const cursorRing = document.createElement('div');
+cursorRing.className = 'cursor-ring';
+document.body.appendChild(cursorRing);
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let ringX = mouseX;
+let ringY = mouseY;
+
 document.addEventListener('mousemove', (e) => {
-  gsap.to(cursor, {
-    x: e.clientX,
-    y: e.clientY,
-    duration: 0.1,
-    ease: "power2.out"
-  });
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  gsap.to(cursor, { x: mouseX, y: mouseY, duration: 0.1, ease: "power2.out" });
+});
+
+gsap.ticker.add(() => {
+  ringX += (mouseX - ringX) * 0.18; // Spring physics tension
+  ringY += (mouseY - ringY) * 0.18;
+  gsap.set(cursorRing, { x: ringX, y: ringY });
 });
 
 document.addEventListener('mousedown', () => {
   gsap.to(cursor, { scale: 0.5, duration: 0.2 });
+  gsap.to(cursorRing, { scale: 0.8, duration: 0.2 });
 });
 document.addEventListener('mouseup', () => {
   gsap.to(cursor, { scale: 1, duration: 0.2 });
+  gsap.to(cursorRing, { scale: 1, duration: 0.2 });
 });
 
 // ==========================================
@@ -64,12 +77,14 @@ magneticElements.forEach((elem) => {
       ease: "power2.out"
     });
     
-    gsap.to(cursor, { scale: 1.5, duration: 0.2 });
+    gsap.to(cursor, { scale: 0, duration: 0.2 });
+    gsap.to(cursorRing, { scale: 1.8, borderColor: 'rgba(203, 166, 247, 0.5)', backgroundColor: 'rgba(203, 166, 247, 0.1)', duration: 0.3 });
   });
 
   elem.addEventListener('mouseleave', () => {
     gsap.to(elem, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
     gsap.to(cursor, { scale: 1, duration: 0.2 });
+    gsap.to(cursorRing, { scale: 1, borderColor: '#cba6f7', backgroundColor: 'transparent', duration: 0.3 });
   });
 });
 
@@ -550,40 +565,133 @@ if (marketplaceGrid) {
       </div>
     `;
     marketplaceGrid.appendChild(card);
+    
+    // 3D Isometric Tilt Matrix
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+      
+      gsap.to(card, {
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, {
+        transform: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
+        duration: 0.6,
+        ease: "elastic.out(1, 0.3)"
+      });
+    });
   });
 
-  window.downloadSkillAsZip = async function(btn, skillKey) {
+  window.downloadSkillAsZip = function(btn, skillKey) {
+    if (btn.classList.contains('downloading')) return;
+    
     const skill = skills.find(s => s.id === skillKey);
     if (!skill) return;
     const files = skill.files;
+    const card = btn.closest('.skill-card');
+
+    // Structural dissolve micro-animation on card
+    gsap.to(card.querySelectorAll('.skill-info, .skill-icon'), {
+      opacity: 0.3,
+      filter: 'blur(4px)',
+      y: 10,
+      duration: 0.4,
+      ease: 'power2.in'
+    });
 
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Downloading...`;
-    btn.style.pointerEvents = 'none';
+    btn.classList.add('downloading');
+    btn.innerHTML = \`<div class="dl-progress-bar"></div><span class="dl-text">Compiling 0%</span>\`;
+    const progressBar = btn.querySelector('.dl-progress-bar');
+    const progressText = btn.querySelector('.dl-text');
 
-    const zip = new window.JSZip();
-    const folder = zip.folder(skillKey);
-
-    try {
-      const fetchPromises = files.map(async (fileName) => {
-        // Fetch directly from the site origin using a relative path to bypass CORS natively
-        const fileUrl = `../assets/lab/hermes-skills/${skillKey}/${fileName}`;
-        const response = await fetch(fileUrl);
-        if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
+    // Offload heavy JSZip computation to a Web Worker
+    const workerCode = \`
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+      self.onmessage = async function(e) {
+        const { skillKey, files } = e.data;
+        const zip = new JSZip();
+        const folder = zip.folder(skillKey);
         
-        const blob = await response.blob();
-        folder.file(fileName, blob);
-      });
+        try {
+          let loaded = 0;
+          const total = files.length;
+          
+          const fetchPromises = files.map(async (fileName) => {
+            const fileUrl = '../assets/lab/hermes-skills/' + skillKey + '/' + fileName;
+            const response = await fetch(fileUrl);
+            if (!response.ok) throw new Error('Failed to fetch ' + fileName);
+            const blob = await response.blob();
+            folder.file(fileName, blob);
+            loaded++;
+            self.postMessage({ type: 'progress', percent: (loaded / total) * 50 });
+          });
+          
+          await Promise.all(fetchPromises);
+          
+          const content = await zip.generateAsync({ 
+            type: 'blob',
+            compression: "DEFLATE",
+            compressionOptions: { level: 6 }
+          }, function updateCallback(metadata) {
+             self.postMessage({ type: 'progress', percent: 50 + (metadata.percent * 0.5) });
+          });
+          
+          self.postMessage({ type: 'done', content });
+        } catch(err) {
+          self.postMessage({ type: 'error', error: err.message });
+        }
+      };
+    \`;
+    
+    const blob = new Blob([workerCode], { type: 'application/javascript' });
+    const worker = new Worker(URL.createObjectURL(blob));
 
-      await Promise.all(fetchPromises);
-      const content = await zip.generateAsync({ type: 'blob' });
-      window.saveAs(content, `${skillKey}.zip`);
-    } catch (error) {
-      console.error('Download failed:', error);
-      alert('Failed to stream and pack files from GitHub.');
-    } finally {
-      btn.innerHTML = originalHtml;
-      btn.style.pointerEvents = 'auto';
+    worker.onmessage = function(e) {
+      if (e.data.type === 'progress') {
+        const percent = Math.floor(e.data.percent);
+        gsap.to(progressBar, { width: \`\${percent}%\`, duration: 0.1 });
+        progressText.innerText = \`Compiling \${percent}%\`;
+      } else if (e.data.type === 'done') {
+        window.saveAs(e.data.content, \`\${skillKey}.zip\`);
+        cleanup(true);
+      } else if (e.data.type === 'error') {
+        console.error('Download failed:', e.data.error);
+        alert('Failed to compile files.');
+        cleanup(false);
+      }
+    };
+
+    function cleanup(success) {
+      worker.terminate();
+      btn.innerHTML = success ? '<i class="fa-solid fa-check"></i> Complete' : originalHtml;
+      
+      gsap.to(card.querySelectorAll('.skill-info, .skill-icon'), {
+        opacity: 1,
+        filter: 'blur(0px)',
+        y: 0,
+        duration: 0.5,
+        ease: 'power3.out'
+      });
+      
+      setTimeout(() => {
+        btn.classList.remove('downloading');
+        btn.innerHTML = originalHtml;
+      }, 2000);
     }
+
+    worker.postMessage({ skillKey, files });
   };
 }

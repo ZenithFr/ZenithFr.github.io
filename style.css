@@ -1,11 +1,11 @@
 /* ROOT VARIABLES */
 :root {
-  --bg-color: #050505;
-  --text-main: #f5f5f7;
-  --text-muted: #86868b;
-  --accent: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --bg-color: #11111b;
+  --text-main: #cdd6f4;
+  --text-muted: #a6adc8;
+  --accent: #cba6f7;
+  --glass-bg: rgba(30, 30, 46, 0.6);
+  --glass-border: #313244;
   
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Syne', sans-serif;
@@ -289,7 +289,7 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
-  border-radius: 24px;
+  border-radius: 0; /* Sharp, technical workstation aesthetics */
   padding: 3rem;
   transition: background 0.3s ease, border-color 0.3s ease;
 }
@@ -873,7 +873,7 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: 0;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -963,7 +963,7 @@ body {
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.75rem;
-  border-radius: 8px;
+  border-radius: 0;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   font-weight: 600;
@@ -971,11 +971,36 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-download:hover {
   background: #ffffff;
   color: #000000;
+}
+
+.btn-download.downloading {
+  background: rgba(203, 166, 247, 0.1);
+  color: var(--accent);
+  border-color: rgba(203, 166, 247, 0.4);
+  pointer-events: none;
+}
+
+.dl-progress-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.dl-text {
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0.1em;
 }
 
 .btn-download svg {
