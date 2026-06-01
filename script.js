@@ -545,8 +545,8 @@ if (marketplaceGrid) {
 
     try {
       const fetchPromises = files.map(async (fileName) => {
-        // Fetch directly from github bypassing CORS limitations via jsDelivr
-        const fileUrl = `https://cdn.jsdelivr.net/gh/ZenithFr/ZenithFr.github.io@main/assets/lab/hermes-skills/${skillKey}/${fileName}`;
+        // Fetch directly from the site origin using a relative path to bypass CORS natively
+        const fileUrl = `../assets/lab/hermes-skills/${skillKey}/${fileName}`;
         const response = await fetch(fileUrl);
         if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
         
