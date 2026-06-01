@@ -308,33 +308,25 @@ heroChars.forEach((char) => {
 // ==========================================
 const terminalSequences = [
   { type: 'command', text: 'neofetch', delay: 800 },
-  { type: 'output', text: `<span class="text-accent"><b>ZENITH OS</b></span>
-------------------
-<span class="text-info">OS</span>: Zenith Linux (Homelab Server)
-<span class="text-info">Host</span>: Custom Bare-Metal Node v2
-<span class="text-info">Kernel</span>: 6.8.0-generic-amd64
-<span class="text-info">Uptime</span>: 42 days, 11 hours, 4 mins
-<span class="text-info">Shell</span>: bash (terminal decoration active)
-<span class="text-info">Docker</span>: 24.0.7 (12 active containers)
-<span class="text-info">Internet</span>: Gigabit Fiber (Ping: 4.2ms)
-<span class="text-info">Cognition</span>: Agentic AI Core
-<span class="text-info">├─ Hermes</span>: Daily Task Automation (Active)
-<span class="text-info">└─ Antigravity</span>: Pair-Programming & Dev (Active)`, delay: 1500 },
+  { type: 'output', text: `<span class="text-accent"><b>zenith@zenesis</b></span>
+<span class="text-muted">--------------</span>
+<span class="text-info">OS</span>: Arch Linux x86_64
+<span class="text-info">Host</span>: Zenesis Custom Build
+<span class="text-info">Kernel</span>: 6.6.10-arch1-1
+<span class="text-info">Uptime</span>: 42 days, 13 hours
+<span class="text-info">Packages</span>: 1337 (pacman)
+<span class="text-info">Shell</span>: zsh 5.9
+<span class="text-info">WM</span>: Hyprland
+<span class="text-info">Terminal</span>: kitty
+<span class="text-info">CPU</span>: AMD Ryzen 9 7950X (32) @ 5.700GHz
+<span class="text-info">GPU</span>: NVIDIA GeForce RTX 4090
+<span class="text-info">Memory</span>: 16384MiB / 64318MiB`, delay: 1500 },
   { type: 'command', text: 'docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}"', delay: 1000 },
   { type: 'output', text: `<span class="text-muted">NAMES               STATUS              PORTS</span>
 zenith-dns-pihole   Up 12 days          53/udp, 80/tcp
 hermes-tasks-brain  Up 4 days (healthy)  8000/tcp -> 80
 antigravity-coder   Up 18 hours         9000/tcp -> 9000
 docker-proxy-nginx  Up 12 days          80/tcp -> 80, 443/tcp`, delay: 1500 },
-  { type: 'command', text: 'ping -c 3 google.com', delay: 800 },
-  { type: 'output', text: `PING google.com (142.250.190.46) 56(84) bytes of data.
-64 bytes from 142.250.190.46: icmp_seq=1 ttl=118 time=4.12 ms
-64 bytes from 142.250.190.46: icmp_seq=2 ttl=118 time=3.95 ms
-64 bytes from 142.250.190.46: icmp_seq=3 ttl=118 time=4.05 ms
-
---- google.com ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2003ms
-rtt min/avg/max/mdev = 3.95/4.04/4.12/0.07 ms`, delay: 2000 },
   { type: 'command', text: 'echo "Ready to build the future."', delay: 1000 },
   { type: 'output', text: `<span class="text-success">Ready to build the future.</span>`, delay: 4000 }
 ];
@@ -342,6 +334,9 @@ rtt min/avg/max/mdev = 3.95/4.04/4.12/0.07 ms`, delay: 2000 },
 function startTerminalAnimation() {
   const terminalBody = document.getElementById('terminal-body');
   if (!terminalBody) return;
+  
+  if (window.terminalIsRunning) return;
+  window.terminalIsRunning = true;
   
   terminalBody.innerHTML = '';
   let seqIndex = 0;
@@ -364,7 +359,7 @@ function startTerminalAnimation() {
     if (seq.type === 'command') {
       const line = document.createElement('div');
       line.className = 'terminal-line';
-      line.innerHTML = `<span class="prompt">allen@zenith-box:~$</span><span class="command-text"></span><span class="cursor-blink">|</span>`;
+      line.innerHTML = `<span class="prompt">zenith@zenesis:~$ </span><span class="command-text"></span><span class="cursor-blink">|</span>`;
       terminalBody.appendChild(line);
       terminalBody.scrollTop = terminalBody.scrollHeight;
       
@@ -493,3 +488,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, 100);
 });
+
+// Hermes Skills Marketplace Generator
+const marketplaceGrid = document.getElementById('skills-grid');
+if (marketplaceGrid) {
+  const skills = [
+    { id: 'ares-persona', icon: 'fa-solid fa-brain' },
+    { id: 'audit-approval-bypass', icon: 'fa-solid fa-shield-halved' },
+    { id: 'audit-mcp', icon: 'fa-solid fa-shield' },
+    { id: 'coinmaxxing', icon: 'fa-solid fa-coins' },
+    { id: 'docker-management', icon: 'fa-brands fa-docker' },
+    { id: 'duckduckgo-search', icon: 'fa-solid fa-magnifying-glass' },
+    { id: 'hermes-agent', icon: 'fa-solid fa-robot' },
+    { id: 'hermes-gateway-deploy', icon: 'fa-solid fa-bolt' },
+    { id: 'hermes-local-auxiliary', icon: 'fa-solid fa-microchip' },
+    { id: 'hermes-skin-authoring', icon: 'fa-solid fa-terminal' },
+    { id: 'lonepirate', icon: 'fa-solid fa-skull-crossbones' }
+  ];
+
+  skills.forEach(skill => {
+    const title = skill.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
+    // As per user, folders are pre-zipped locally so download directly from relative path
+    const downloadPath = `../assets/Lab/zips/${skill.id}.zip`;
+    
+    const card = document.createElement('div');
+    card.className = 'skill-card';
+    card.innerHTML = `
+      <div class="skill-header">
+        <div class="skill-icon">
+          <i class="${skill.icon} fa-xl"></i>
+        </div>
+        <div class="skill-info">
+          <h3>${title}</h3>
+          <p>${skill.id}/</p>
+        </div>
+      </div>
+      <div class="skill-actions">
+        <a href="${downloadPath}" download class="btn-download" onclick="startDownload(this, event)">
+          <i class="fa-solid fa-download"></i> Download Zip
+        </a>
+      </div>
+    `;
+    marketplaceGrid.appendChild(card);
+  });
+}
+
+// Download button micro-interaction
+window.startDownload = function(btn, e) {
+  // Prevent actual navigation/download in the editor if testing, but since it's an a tag with download attribute, the browser handles it.
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Downloading...`;
+  
+  // Revert back after a simulated delay so the user knows it was clicked
+  setTimeout(() => {
+    btn.innerHTML = originalHtml;
+  }, 2000);
+}
