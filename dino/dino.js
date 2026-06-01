@@ -168,7 +168,7 @@ class Player {
           (Math.random() - 0.5) * 2,
           -3 - Math.random() * 4, // Shoot upwards as we fly down
           Math.random() * 2 + 1,
-          'rgba(255, 255, 255, 0.4)'
+          'rgba(203, 166, 247, 0.4)'
         ));
       }
     } else {
@@ -208,13 +208,13 @@ class Player {
           this.scaleY = 0.45; // Hard squash for fast fall impact
           this.scaleX = 1.55;
           screenshake = 8;    // Stronger screen impact shake
-          createParticleExplosion(this.x + this.width / 2, PHYSICS.groundY, '#ffffff', 14); // Larger impact burst
+          createParticleExplosion(this.x + this.width / 2, PHYSICS.groundY, '#cba6f7', 14); // Larger impact burst
         } else {
           // Standard jump landing
           this.scaleY = 0.7;
           this.scaleX = 1.3;
           screenshake = 5;
-          createParticleExplosion(this.x + this.width / 2, PHYSICS.groundY, '#f5f5f7', 8);
+          createParticleExplosion(this.x + this.width / 2, PHYSICS.groundY, '#cdd6f4', 8);
         }
       }
       
@@ -248,10 +248,10 @@ class Player {
 
     // Apply glowing stroke styling matching the site design
     ctx.shadowBlur = 10;
-    ctx.shadowColor = '#ffffff';
-    ctx.strokeStyle = '#ffffff';
+    ctx.shadowColor = '#cba6f7';
+    ctx.strokeStyle = '#cba6f7';
     ctx.lineWidth = 2.5;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.fillStyle = 'rgba(203, 166, 247, 0.05)';
 
     ctx.beginPath();
     
@@ -365,10 +365,10 @@ class Obstacle {
   draw() {
     ctx.save();
     ctx.shadowBlur = 8;
-    ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
+    ctx.shadowColor = 'rgba(203, 166, 247, 0.4)';
     ctx.lineWidth = 2;
-    ctx.strokeStyle = '#f5f5f7';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+    ctx.strokeStyle = '#cdd6f4';
+    ctx.fillStyle = 'rgba(203, 166, 247, 0.02)';
 
     ctx.beginPath();
     if (this.drawType === 'spike') {
@@ -444,7 +444,7 @@ canvas.addEventListener('touchend', () => {
 // Grid Flow Decorative Background
 function drawGrid() {
   ctx.save();
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+  ctx.strokeStyle = 'rgba(203, 166, 247, 0.02)';
   ctx.lineWidth = 1;
 
   // Running speed responsive horizontal grids
@@ -463,7 +463,7 @@ function drawGrid() {
 // Draw Ground Plane
 function drawGround() {
   ctx.save();
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.strokeStyle = 'rgba(203, 166, 247, 0.15)';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(0, PHYSICS.groundY);
@@ -522,7 +522,7 @@ function triggerGameOver() {
   }
 
   // Large decorative crash particles
-  createParticleExplosion(player.x + player.width / 2, player.y + player.height / 2, '#ffffff', 24);
+  createParticleExplosion(player.x + player.width / 2, player.y + player.height / 2, '#cba6f7', 24);
   screenshake = 15;
   gameoverOverlay.classList.remove('hidden');
 }
