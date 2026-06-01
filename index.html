@@ -38,9 +38,9 @@
     
     <div class="nav-menu">
       <a href="#about" class="nav-item magnetic" data-strength="20">About</a>
+      <a href="lab/index.html" class="nav-item magnetic" data-strength="20">Lab</a>
       <a href="#contact" class="nav-item magnetic" data-strength="20">Contact</a>
       <a href="https://github.com/ZenithFr" target="_blank" class="nav-item magnetic" data-strength="20">GitHub</a>
-      <a href="https://instagram.com/allen.mkv" target="_blank" class="nav-item magnetic" data-strength="20">Instagram</a>
     </div>
   </nav>
 
@@ -76,21 +76,25 @@
         
         <div class="about-grid">
           <div class="about-text glass-card">
-            <p>Hey! I'm Allen. My brain is basically a web browser with 100 tabs open at all times. I love diving down rabbit holes, soaking up random knowledge, and figuring out how things tick.</p>
-            <p>I don't have "clients" or "business models" — I just build things because learning is wildly fun. Welcome to my digital playground!</p>
+            <p>Yo! I'm Allen. This whole site? Just a massive hobby project of mine. My brain is basically a web browser with 100 tabs open, constantly jumping from one rabbit hole to the next.</p>
+            <p>I just break stuff, figure out how it ticks, and build it back up because learning is wildly fun. Consider this my personal digital playground!</p>
           </div>
           
           <div class="about-stats glass-card">
             <div class="stat">
-              <span class="stat-num">∞</span>
+              <span class="stat-num" id="stat-infinity" style="display:flex; justify-content:center; align-items:center; height: 1.2em;">
+                <svg width="55" height="35" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+                  <path id="infinity-path" d="M 50 25 C 25 0, 0 10, 10 30 C 20 50, 45 40, 50 25 C 55 10, 80 0, 90 20 C 100 40, 75 50, 50 25 Z" />
+                </svg>
+              </span>
               <span class="stat-label">Curiosity</span>
             </div>
             <div class="stat">
-              <span class="stat-num">100+</span>
+              <span class="stat-num" id="stat-ideas">0</span>
               <span class="stat-label">Late Night Ideas</span>
             </div>
             <div class="stat">
-              <span class="stat-num">0</span>
+              <span class="stat-num" id="stat-boring">0</span>
               <span class="stat-label">Boring Days</span>
             </div>
           </div>
@@ -110,6 +114,8 @@
         </div>
       </div>
     </section>
+
+
 
     <!-- Links Section -->
     <section class="section links" id="links">
@@ -154,9 +160,9 @@
         </div>
         
         <div class="contact-box glass-card">
-          <p>Want to share a random fun fact, talk about tech, or just say hi? Drop into my DMs on Instagram!</p>
+          <p>Got a weird tech problem? Found a cool homelab trick? Or just wanna say hi? Slide into my Instagram DMs and let's chat!</p>
           <a href="https://instagram.com/allen.mkv" target="_blank" class="btn magnetic" data-strength="20">
-            Say Hello <span>@allen.mkv</span>
+            Hit me up <span>@allen.mkv</span>
           </a>
         </div>
       </div>
@@ -165,7 +171,7 @@
 
   <footer class="footer">
     <div class="container footer-content">
-      <p>© 2026 Zenith. Crafted with passion.</p>
+      <p>© 2026 Zenith. Built for fun, fueled by curiosity.</p>
       
       <!-- NEW: GEOMETRIC EASTER EGG RUNNING DINO -->
       <a href="dino/dino.html" class="footer-dino magnetic" data-strength="15" title="Play Zenith Run">
@@ -191,6 +197,7 @@
   <script src="https://unpkg.com/lenis@1.1.2/dist/lenis.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/split-type"></script>
   
   <script src="script.js"></script>
 </body>

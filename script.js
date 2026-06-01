@@ -116,22 +116,95 @@ const interval = setInterval(() => {
     }, "-=0.5");
   }
 }, 30);
+// ==========================================
+// ABOUT STATS ANIMATIONS
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Infinity Loop (Continuous Path Drawing)
+  const infinityPath = document.getElementById("infinity-path");
+  if (infinityPath) {
+    const length = infinityPath.getTotalLength();
+    gsap.set(infinityPath, { strokeDasharray: length, strokeDashoffset: length });
+    gsap.to(infinityPath, {
+      strokeDashoffset: 0,
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "power2.inOut"
+    });
+  }
 
-// Scroll Animations
-const sections = document.querySelectorAll('.section');
-sections.forEach((sec) => {
-  gsap.from(sec.querySelectorAll('.section-num, .section-title, .glass-card'), {
-    y: 50,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.1,
-    ease: "elastic.out(0.80,0.75)",
+  // 2. Late Night Ideas Counter (0 to 100+)
+  const ideasCounter = { val: 0 };
+  gsap.to(ideasCounter, {
+    val: 100,
+    duration: 2.5,
+    ease: "power3.out",
     scrollTrigger: {
-      trigger: sec,
-      start: "top 30%",
+      trigger: ".about-stats",
+      start: "top 85%",
+    },
+    onUpdate: () => {
+      const el = document.getElementById("stat-ideas");
+      if (el) el.innerText = Math.floor(ideasCounter.val) + "+";
     }
   });
+
+  // 3. Boring Days Carousel (Random 0 to 3 every 150ms)
+  const boringEl = document.getElementById("stat-boring");
+  if (boringEl) {
+    boringEl.style.position = "relative";
+    boringEl.style.display = "inline-flex";
+    boringEl.style.overflow = "hidden";
+    boringEl.style.height = "1em";
+    boringEl.style.width = "1ch"; // Keep width stable
+    boringEl.style.justifyContent = "center";
+    boringEl.style.alignItems = "center";
+    
+    let currentSpan = document.createElement("div");
+    currentSpan.innerText = "0";
+    currentSpan.style.position = "absolute";
+    currentSpan.style.height = "100%";
+    currentSpan.style.width = "100%";
+    currentSpan.style.display = "flex";
+    currentSpan.style.alignItems = "center";
+    currentSpan.style.justifyContent = "center";
+    
+    boringEl.innerHTML = "";
+    boringEl.appendChild(currentSpan);
+
+    function nextSpin() {
+      let randomVal;
+      do {
+        randomVal = Math.floor(Math.random() * 4);
+      } while (randomVal.toString() === currentSpan.innerText);
+      
+      const nextSpan = document.createElement("div");
+      nextSpan.innerText = randomVal.toString();
+      nextSpan.style.position = "absolute";
+      nextSpan.style.height = "100%";
+      nextSpan.style.width = "100%";
+      nextSpan.style.display = "flex";
+      nextSpan.style.alignItems = "center";
+      nextSpan.style.justifyContent = "center";
+      
+      const dir = Math.random() > 0.5 ? 1 : -1;
+      gsap.set(nextSpan, { yPercent: dir * 100 });
+      boringEl.appendChild(nextSpan);
+      
+      // Slide takes 200ms, then a 100ms pause to cleanly read the number (300ms total)
+      gsap.to(currentSpan, { yPercent: -dir * 100, duration: 0.2, ease: "power1.inOut" });
+      gsap.to(nextSpan, { yPercent: 0, duration: 0.2, ease: "power1.inOut", onComplete: () => {
+        if (currentSpan.parentNode) currentSpan.remove();
+        currentSpan = nextSpan;
+        setTimeout(nextSpin, 100);
+      }});
+    }
+    
+    setTimeout(nextSpin, 300);
+  }
 });
+
 
 // Three.js Background Canvas (Lightweight Particles)
 const canvas = document.getElementById('webgl-canvas');
@@ -228,4 +301,195 @@ heroChars.forEach((char) => {
       ease: "elastic.out(1, 0.75)" // Springy rebound matching the rest of the site
     });
   });
+});
+
+// ==========================================
+// TERMINAL TYPING ANIMATION
+// ==========================================
+const terminalSequences = [
+  { type: 'command', text: 'neofetch', delay: 800 },
+  { type: 'output', text: `<span class="text-accent"><b>ZENITH OS</b></span>
+------------------
+<span class="text-info">OS</span>: Zenith Linux (Homelab Server)
+<span class="text-info">Host</span>: Custom Bare-Metal Node v2
+<span class="text-info">Kernel</span>: 6.8.0-generic-amd64
+<span class="text-info">Uptime</span>: 42 days, 11 hours, 4 mins
+<span class="text-info">Shell</span>: bash (terminal decoration active)
+<span class="text-info">Docker</span>: 24.0.7 (12 active containers)
+<span class="text-info">Internet</span>: Gigabit Fiber (Ping: 4.2ms)
+<span class="text-info">Cognition</span>: Agentic AI Core
+<span class="text-info">├─ Hermes</span>: Daily Task Automation (Active)
+<span class="text-info">└─ Antigravity</span>: Pair-Programming & Dev (Active)`, delay: 1500 },
+  { type: 'command', text: 'docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}"', delay: 1000 },
+  { type: 'output', text: `<span class="text-muted">NAMES               STATUS              PORTS</span>
+zenith-dns-pihole   Up 12 days          53/udp, 80/tcp
+hermes-tasks-brain  Up 4 days (healthy)  8000/tcp -> 80
+antigravity-coder   Up 18 hours         9000/tcp -> 9000
+docker-proxy-nginx  Up 12 days          80/tcp -> 80, 443/tcp`, delay: 1500 },
+  { type: 'command', text: 'ping -c 3 google.com', delay: 800 },
+  { type: 'output', text: `PING google.com (142.250.190.46) 56(84) bytes of data.
+64 bytes from 142.250.190.46: icmp_seq=1 ttl=118 time=4.12 ms
+64 bytes from 142.250.190.46: icmp_seq=2 ttl=118 time=3.95 ms
+64 bytes from 142.250.190.46: icmp_seq=3 ttl=118 time=4.05 ms
+
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 3.95/4.04/4.12/0.07 ms`, delay: 2000 },
+  { type: 'command', text: 'echo "Ready to build the future."', delay: 1000 },
+  { type: 'output', text: `<span class="text-success">Ready to build the future.</span>`, delay: 4000 }
+];
+
+function startTerminalAnimation() {
+  const terminalBody = document.getElementById('terminal-body');
+  if (!terminalBody) return;
+  
+  terminalBody.innerHTML = '';
+  let seqIndex = 0;
+  
+  function runSequence() {
+    if (!window.terminalAnimated) return;
+    
+    if (seqIndex >= terminalSequences.length) {
+      setTimeout(() => {
+        if (!window.terminalAnimated) return;
+        terminalBody.innerHTML = '';
+        seqIndex = 0;
+        runSequence();
+      }, 3000);
+      return;
+    }
+    
+    const seq = terminalSequences[seqIndex];
+    
+    if (seq.type === 'command') {
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      line.innerHTML = `<span class="prompt">allen@zenith-box:~$</span><span class="command-text"></span><span class="cursor-blink">|</span>`;
+      terminalBody.appendChild(line);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      
+      const cmdTextSpan = line.querySelector('.command-text');
+      const cursorSpan = line.querySelector('.cursor-blink');
+      
+      let charIndex = 0;
+      const cmdText = seq.text;
+      
+      function typeChar() {
+        if (!window.terminalAnimated) return;
+        if (charIndex < cmdText.length) {
+          cmdTextSpan.textContent += cmdText[charIndex];
+          charIndex++;
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+          setTimeout(typeChar, Math.random() * 40 + 15);
+        } else {
+          cursorSpan.remove();
+          seqIndex++;
+          setTimeout(runSequence, seq.delay);
+        }
+      }
+      
+      setTimeout(typeChar, 300);
+    } else if (seq.type === 'output') {
+      const line = document.createElement('div');
+      line.className = 'terminal-output';
+      line.innerHTML = seq.text;
+      terminalBody.appendChild(line);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      
+      seqIndex++;
+      setTimeout(runSequence, seq.delay);
+    }
+  }
+  
+  runSequence();
+}
+
+ScrollTrigger.create({
+  trigger: "#lab",
+  start: "top 80%",
+  onEnter: () => {
+    if (!window.terminalAnimated) {
+      window.terminalAnimated = true;
+      startTerminalAnimation();
+    }
+  }
+});
+
+// ==========================================
+// ADVANCED TEXT REVEAL (Synapser Studio Style)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait slightly to ensure fonts are loaded so SplitType calculates widths correctly
+  setTimeout(() => {
+    // Basic element fade-ins (cards, numbers) - excluding link cards for a custom animation
+    const sections = document.querySelectorAll('.section');
+    sections.forEach((sec) => {
+      gsap.from(sec.querySelectorAll('.section-num, .glass-card:not(.about-text):not(.lab-info):not(.link-card)'), {
+        scrollTrigger: {
+          trigger: sec,
+          start: "top 75%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out"
+      });
+    });
+
+    // Unique Blur-In Animation for "My Links" Cards
+    const linkCards = document.querySelectorAll('.link-card');
+    if (linkCards.length > 0) {
+      gsap.fromTo(linkCards, 
+        { 
+          opacity: 0, 
+          y: 60, 
+          filter: "blur(20px)" 
+        },
+        {
+          scrollTrigger: {
+            trigger: "#links",
+            start: "top 40%",
+          },
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+          stagger: 0.2,
+          ease: "power4.out"
+        }
+      );
+    }
+
+    // Advanced Text Reveal for typography
+    const revealElements = document.querySelectorAll('.section-title, .about-text p, .lab-info p, .contact-box p');
+    
+    revealElements.forEach((el) => {
+      // Split text into lines, words, and chars
+      const split = new SplitType(el, { types: 'lines, words, chars' });
+      
+      // Wrap each line in a hidden overflow container to create the "reveal from bottom" mask
+      split.lines.forEach(line => {
+        const wrapper = document.createElement('div');
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.display = 'block'; // Ensure block formatting context
+        line.parentNode.insertBefore(wrapper, line);
+        wrapper.appendChild(line);
+      });
+
+      // Animate the characters up and rotate slightly for a cinematic, premium feel
+      gsap.from(split.chars, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+        },
+        y: '100%',
+        rotationZ: 3,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.015,
+        ease: 'power4.out'
+      });
+    });
+  }, 100);
 });
