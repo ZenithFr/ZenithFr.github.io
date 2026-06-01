@@ -517,7 +517,7 @@ if (marketplaceGrid) {
     card.innerHTML = `
       <div class="skill-header">
         <div class="skill-icon">
-          <i class="${skill.icon} fa-xl"></i>
+          <i class="${skill.icon} fa-fw"></i>
         </div>
         <div class="skill-info">
           <h3>${title}</h3>
