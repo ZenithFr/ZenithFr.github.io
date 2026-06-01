@@ -91,20 +91,26 @@ magneticElements.forEach((elem) => {
 // ==========================================
 // 4. LOADING SCREEN & HERO REVEAL
 // ==========================================
-// Handles the fake loading progress and animates hero intro
-const loaderProgress = document.getElementById('loader-progress-fill');
-const loaderPercent = document.getElementById('loader-percent');
+const loaderCounter = document.getElementById('loader-percent');
 let progress = 0;
-
-// Prevent scrolling while loading
 document.body.style.overflow = 'hidden';
 
+// Initial Reveal of Loader Elements
+gsap.to(['.loader-counter', '.loader-label'], {
+  y: 0,
+  opacity: 1,
+  duration: 1,
+  stagger: 0.2,
+  ease: "power4.out"
+});
+
 const interval = setInterval(() => {
-  progress += Math.floor(Math.random() * 10) + 1;
+  progress += Math.floor(Math.random() * 8) + 2;
   if (progress > 100) progress = 100;
   
-  loaderProgress.style.width = `${progress}%`;
-  loaderPercent.innerText = `${progress}%`;
+  if (loaderCounter) {
+    loaderCounter.innerText = progress.toString().padStart(3, '0');
+  }
 
   if (progress === 100) {
     clearInterval(interval);
@@ -113,36 +119,36 @@ const interval = setInterval(() => {
       onComplete: () => {
         document.body.style.overflow = '';
         const heroTitle = document.querySelector('.hero-title');
-        if (heroTitle) {
-          heroTitle.style.overflow = 'visible';
+        if (heroTitle) heroTitle.style.overflow = 'visible';
       }
-    }});
+    });
     
-    tl.to(".loader-content", {
+    tl.to('.loader-wrapper', {
+      y: -50,
       opacity: 0,
-      y: -20,
-      duration: 0.5,
-      delay: 0.2
+      duration: 0.6,
+      ease: "power3.in"
     })
-    .to(".loader", {
-      yPercent: -100,
+    .to('.loader-background', {
+      scaleY: 0,
+      transformOrigin: "top",
       duration: 1,
-      ease: "power4.inOut"
-    })
+      ease: "expo.inOut"
+    }, "-=0.2")
     .fromTo(".hero-title .char", 
       { y: "100%" }, 
-      { y: "0%", stagger: 0.05, duration: 2, ease: "elastic.out(1.1,0.75)" },
+      { y: "0%", stagger: 0.05, duration: 1.5, ease: "expo.out" },
       "-=0.5"
     )
     .to(".hero-subtitle, .scroll-indicator, .navbar", {
       opacity: 1,
       y: 0,
       duration: 1,
-      stagger: 0.2,
-      ease: "elastic.out(1,1)"
-    }, "-=0.5");
+      stagger: 0.1,
+      ease: "power3.out"
+    }, "-=1");
   }
-}, 30);
+}, 40);
 // ==========================================
 // ABOUT STATS ANIMATIONS
 // ==========================================
