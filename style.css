@@ -187,6 +187,10 @@ body {
 
 .hero-content {
   text-align: center;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+body.glitch-active .hero-content {
   transform: translateY(-8vh);
 }
 
