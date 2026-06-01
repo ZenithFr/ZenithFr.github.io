@@ -673,7 +673,7 @@ const glitchToggle = document.getElementById('glitch-toggle');
 const heroTitle = document.querySelector('.hero-title');
 const originalTitleHTML = heroTitle.innerHTML;
 
-const glitchWords = ['zenith', 'THANTHA', 'INSANE', 'LOWRES', 'RYUKO', 'GXM', 'I SEE YOU'];
+const glitchWords = ['ZENITH', 'THANTHA', 'INSANE', 'LOWRES', 'RYUKO', 'GXM', 'I SEE YOU'];
 let glitchActive = false;
 let currentWordIndex = 0;
 let glitchTimeout;
