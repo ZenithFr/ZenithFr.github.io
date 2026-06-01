@@ -187,33 +187,21 @@ body {
 
 .hero-content {
   text-align: center;
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-body.glitch-active .hero-content {
-  transform: translateY(-8vh);
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 10vw, 8rem);
+  font-size: clamp(4rem, 15vw, 12rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
   overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 .hero-title .char {
   display: inline-block;
   transform: translateY(100%);
-}
-
-body.glitch-active .hero-title .char {
-  transform: translateY(0) !important;
 }
 
 .hero-subtitle {
@@ -1022,19 +1010,19 @@ body.glitch-active .hero-title .char {
 @keyframes spin { 100% { transform: rotate(360deg); } }
 .spin-icon { animation: spin 1s linear infinite; }
 /* ==========================================
-   GLITCH MODE OVERRIDES
+/* ==========================================
+   THEME SWITCH OVERRIDES
    ========================================== */
 
-/* 1. Global Greyscale */
 body {
   transition: filter 0.5s ease;
 }
-body.glitch-active {
+
+body.bw-active {
   filter: grayscale(100%);
 }
 
-/* 2. Glitch Toggle Button */
-.glitch-toggle {
+.theme-switch {
   position: fixed;
   bottom: 20px;
   left: 20px;
@@ -1046,76 +1034,11 @@ body.glitch-active {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.1em;
-  cursor: none;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.glitch-toggle:hover {
+.theme-switch:hover {
   background: var(--text-main);
   color: var(--bg-color);
-}
-
-/* 3. Full-Site Glitch Overlay */
-.glitch-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9990;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  mix-blend-mode: overlay;
-}
-
-body.glitch-active .glitch-overlay {
-  opacity: 1;
-  visibility: visible;
-  animation: crtFlicker 0.15s infinite;
-}
-
-@keyframes crtFlicker {
-  0% { opacity: 0.9; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(1px); }
-  100% { opacity: 0.8; transform: translateY(-1px); }
-}
-
-/* 4. Subtitle and All Text Glitch Effect */
-body.glitch-active h1:not(.hero-title),
-body.glitch-active h2,
-body.glitch-active h3,
-body.glitch-active p,
-body.glitch-active a,
-body.glitch-active span:not(.char) {
-  animation: text-glitch 0.4s infinite linear alternate-reverse;
-  display: inline-block;
-}
-
-body.glitch-active p { animation-duration: 0.25s; }
-body.glitch-active h2 { animation-duration: 0.15s; }
-body.glitch-active h3 { animation-duration: 0.35s; }
-body.glitch-active a { animation-duration: 0.2s; }
-body.glitch-active .hero-subtitle { animation-duration: 0.18s; }
-
-@keyframes text-glitch {
-  0% { text-shadow: 4px 0 0 rgba(255,0,0,1), -4px 0 0 rgba(0,255,255,1); transform: translate(2px, -2px) skewX(2deg); }
-  10% { text-shadow: -5px 0 0 rgba(255,0,0,1), 3px 0 0 rgba(0,255,255,1); transform: translate(-3px, 1px) skewX(-2deg); }
-  20% { text-shadow: 3px 0 0 rgba(255,0,0,1), -2px 0 0 rgba(0,255,255,1); transform: translate(1px, 2px) skewX(1deg); }
-  30% { text-shadow: -4px 0 0 rgba(255,0,0,1), 5px 0 0 rgba(0,255,255,1); transform: translate(-2px, -1px) skewX(-3deg); }
-  40% { text-shadow: 2px 0 0 rgba(255,0,0,1), -3px 0 0 rgba(0,255,255,1); transform: translate(3px, 0) skewX(2deg); }
-  50% { text-shadow: -3px 0 0 rgba(255,0,0,1), 2px 0 0 rgba(0,255,255,1); transform: translate(-1px, 3px) skewX(-1deg); }
-  60% { text-shadow: 5px 0 0 rgba(255,0,0,1), -5px 0 0 rgba(0,255,255,1); transform: translate(2px, -3px) skewX(3deg); }
-  70% { text-shadow: -2px 0 0 rgba(255,0,0,1), 4px 0 0 rgba(0,255,255,1); transform: translate(-3px, 2px) skewX(-2deg); }
-  80% { text-shadow: 4px 0 0 rgba(255,0,0,1), -2px 0 0 rgba(0,255,255,1); transform: translate(1px, -1px) skewX(1deg); }
-  90% { text-shadow: -5px 0 0 rgba(255,0,0,1), 5px 0 0 rgba(0,255,255,1); transform: translate(-2px, 3px) skewX(-3deg); }
-  100% { text-shadow: 3px 0 0 rgba(255,0,0,1), -4px 0 0 rgba(0,255,255,1); transform: translate(3px, -2px) skewX(2deg); }
 }
