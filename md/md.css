@@ -1,0 +1,198 @@
+/* Zenith OS Explorer Aesthetics */
+.os-body {
+    background-color: var(--bg-color, #0a0a0a);
+    color: var(--text-color, #ffffff);
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.desktop-environment {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.window-explorer {
+    width: 80%;
+    max-width: 1000px;
+    height: 70vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.window-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+    margin-right: 1rem;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.control.close { background-color: #ff5f56; }
+.control.minimize { background-color: #ffbd2e; }
+.control.maximize { background-color: #27c93f; }
+
+.window-title {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-family: 'Space Grotesk', monospace;
+    flex: 1;
+    text-align: center;
+}
+
+.window-toolbar {
+    display: flex;
+    padding: 0.75rem 1rem;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+}
+
+.toolbar-nav button {
+    background: none;
+    border: none;
+    color: var(--text-color, #fff);
+    opacity: 0.5;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.toolbar-nav button:hover {
+    opacity: 1;
+}
+
+.toolbar-address, .toolbar-search {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-address {
+    flex: 1;
+}
+.toolbar-search {
+    width: 200px;
+    opacity: 0.6;
+}
+
+.window-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 200px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.sidebar li:hover {
+    background: rgba(255, 255, 255, 0.05);
+    opacity: 1;
+}
+.sidebar li.active {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+    border-left: 3px solid #fff;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    overflow-y: auto;
+}
+
+.file-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-color, #fff);
+    transition: 0.2s;
+    border: 1px solid transparent;
+}
+
+.file-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.file-icon {
+    margin-bottom: 0.75rem;
+    color: #4a90e2;
+}
+
+.file-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    word-break: break-all;
+}
+
+.file-meta {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    margin-top: 0.25rem;
+    text-align: center;
+}

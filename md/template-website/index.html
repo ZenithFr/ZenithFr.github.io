@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System: Monochromatic Brutalist Glitch</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="halftone-bg"></div>
+
+    <header class="header">
+        <h1 class="glitch-text" data-text="DESIGN.MD // SYSTEM">DESIGN.MD // SYSTEM</h1>
+        <p>Visual Design System: Monochromatic Brutalist Glitch Collage</p>
+    </header>
+
+    <main class="container">
+        <!-- COLOR PALETTE SECTION -->
+        <section class="section">
+            <h2 class="section-title">01. COLOR PALETTE</h2>
+            <div class="grid-2">
+                <div class="color-swatch bg-black text-white">
+                    <h3>PURE BLACK</h3>
+                    <p>#000000</p>
+                    <p class="small-text">Primary Glitch & Elements</p>
+                </div>
+                <div class="color-swatch bg-white text-black border-black">
+                    <h3>PURE WHITE</h3>
+                    <p>#FFFFFF</p>
+                    <p class="small-text">Primary Background</p>
+                </div>
+            </div>
+            <p class="note"><strong>RULE:</strong> Absolutely no shades of solid grey. Only pure black and pure white values are allowed. All intermediate values must be rendered as stipple patterns or variable-density halftone dot grids.</p>
+        </section>
+
+        <!-- TYPOGRAPHY SECTION -->
+        <section class="section dark-section">
+            <h2 class="section-title">02. TYPOGRAPHY</h2>
+            <div class="typo-examples">
+                <div class="typo-row">
+                    <span class="label">Heading 1 (VT323)</span>
+                    <h1 class="sample">Digital Breakdown</h1>
+                </div>
+                <div class="typo-row">
+                    <span class="label">Heading 2 (VT323)</span>
+                    <h2 class="sample">Physical Collage</h2>
+                </div>
+                <div class="typo-row">
+                    <span class="label">Body (Space Mono)</span>
+                    <p class="sample-body">It is an intersection of raw grit, precision wireframes, and purposeful digital decay.</p>
+                </div>
+            </div>
+            <div class="distressed-text-container">
+                <h3>Distressed Integration Examples:</h3>
+                <div class="text-snippet t1">All is well and the end is still well, though prayer you're still alive...</div>
+                <div class="text-snippet t2 inverted">You finally have no reason to be valuable congratulations</div>
+            </div>
+        </section>
+
+        <!-- SIZING & SPACING SECTION -->
+        <section class="section">
+            <h2 class="section-title">03. SIZING & SPACING</h2>
+            <p class="note"><strong>RULE:</strong> No clean grid. Elements are placed in a raw, chaotic but intentional balance across the frame. Aggressive, layered overlapping.</p>
+            
+            <div class="spacing-demo">
+                <div class="brutalist-zone-demo">
+                    <p>Brutalist Zone (Solid White Arena)</p>
+                    <div class="glitch-block-small" style="top:20%; left:10%;"></div>
+                    <div class="glitch-block-small" style="bottom:10%; right:20%;"></div>
+                </div>
+                <div class="chaotic-overlay">
+                    <div class="wireframe-ring-small"></div>
+                    <p class="overlapping-text">Overlapped Element</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRAPHICAL ELEMENTS SECTION -->
+        <section class="section">
+            <h2 class="section-title">04. GRAPHICAL ELEMENTS</h2>
+            
+            <div class="grid-3">
+                <div class="element-card">
+                    <h3>Glitch Artifacts</h3>
+                    <div class="glitch-block-demo"></div>
+                    <p class="small-text">Solid black data corruption blocks and pixel noise clusters.</p>
+                </div>
+                <div class="element-card">
+                    <h3>Geometric & Wireframe</h3>
+                    <div class="geo-demo">
+                        <svg viewBox="0 0 100 100" class="geo-star">
+                            <polygon points="50,0 60,35 95,35 65,55 75,90 50,70 25,90 35,55 5,35 40,35" fill="black"/>
+                        </svg>
+                    </div>
+                    <p class="small-text">Perfect geometric spheres and stars, solid black or white.</p>
+                </div>
+                <div class="element-card bg-black text-white">
+                    <h3>Stenciled Doves</h3>
+                    <div class="geo-demo">
+                        <svg viewBox="0 0 100 100" class="geo-dove">
+                            <path d="M10,80 Q30,60 50,50 T90,10 Q80,40 50,70 T10,80 Z" fill="white" />
+                        </svg>
+                    </div>
+                    <p class="small-text">Stenciled forms. Pure white doves on dark/glitch areas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- IMAGERY SECTION -->
+        <section class="section">
+            <h2 class="section-title">05. IMAGERY & TEXTURES</h2>
+            <div class="imagery-grid">
+                <div class="image-container">
+                    <img src="assets/hand_light.png" alt="Light Stipple Hand" class="demo-image">
+                    <p>Light Stipple Pattern</p>
+                </div>
+                <div class="image-container bg-black text-white">
+                    <img src="assets/hand_dark.png" alt="Dark Stipple Hand" class="demo-image inverted-img">
+                    <p>Dense Viscous Stipple</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESIGN.MD OPEN STANDARD SECTION -->
+        <section class="section dark-section">
+            <h2 class="section-title">06. DESIGN.MD OPEN STANDARD</h2>
+            <p class="sample-body" style="margin-bottom: 2rem; max-width: 800px;">
+                Inspired by the open standard for AI-generated UI, <strong>DESIGN.md</strong> acts as the unified context bridge between human designers and AI coding agents. It merges machine-readable YAML design tokens with human-readable markdown prose. 
+            </p>
+            
+            <div class="grid-2">
+                <div style="background-color: var(--white); color: var(--black); padding: 2rem;">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 2px solid var(--black);">Why DESIGN.md?</h3>
+                    <ul style="list-style: square inside; font-size: 1.1rem; line-height: 1.8;">
+                        <li><strong>Unified Context:</strong> Keeps design variables and rules in one single truth file.</li>
+                        <li><strong>Semantic Roles:</strong> Teaches AI to treat tokens as semantic constraints, not just variables.</li>
+                        <li><strong>Validation:</strong> Ensures AI updates maintain brand consistency before output.</li>
+                    </ul>
+                </div>
+                
+                <div style="border: 2px dashed var(--white); padding: 2rem; position: relative;">
+                    <div class="text-snippet" style="top: -20px; right: -20px; font-size: 1rem; transform: rotate(5deg);">YAML Frontmatter</div>
+                    <pre style="font-family: 'Space Mono', monospace; font-size: 0.9rem; white-space: pre-wrap;">
+---
+colors:
+  primary-background: "#FFFFFF"
+  primary-glitch: "#000000"
+typography:
+  heading-font: "VT323, monospace"
+  body-font: "Space Mono, monospace"
+---
+# Visual Design System
+**Core Concept:** A digital breakdown and 
+physical collage intersection...
+                    </pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>SYSTEM INITIATED // NO MATTER WHAT YOU DO, I WILL EVENTUALLY BECOME MYSELF.</p>
+    </footer>
+</body>
+</html>
