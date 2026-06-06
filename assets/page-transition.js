@@ -24,10 +24,22 @@ function initPageTransitions() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        color: "#cba6f7",
+        color: "#ffffff",
         fontFamily: "'Inter', sans-serif",
         transformOrigin: "bottom" // For scaling up/down
     });
+
+    const canvas = document.createElement("canvas");
+    Object.assign(canvas.style, {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: -1,
+        pointerEvents: "none"
+    });
+    overlay.appendChild(canvas);
 
     const loaderContent = document.createElement("div");
     Object.assign(loaderContent.style, {
@@ -71,7 +83,7 @@ function initPageTransitions() {
     Object.assign(progressBar.style, {
         width: "0%",
         height: "100%",
-        backgroundColor: "#cba6f7",
+        backgroundColor: "#ffffff",
         position: "absolute",
         left: 0,
         top: 0
@@ -86,60 +98,174 @@ function initPageTransitions() {
     // Lock scroll during load
     document.body.style.overflow = "hidden";
 
-    // Detect if this is the FIRST LOAD or a CROSS-PAGE NAVIGATION
-    const isFirstLoad = !sessionStorage.getItem("zenith_loaded");
+    // Simulate a longer, premium cinematic first-load
+    gsap.to(".loader-char", {
+        y: "0%",
+        duration: 1,
+        stagger: 0.1,
+        ease: "expo.out",
+        delay: 0.2,
+        onComplete: () => {
+            // Passive glowing wave while loading
+            gsap.to(".loader-char", {
+                textShadow: "0px 0px 20px rgba(255,255,255,0.8)",
+                opacity: 0.7,
+                duration: 1,
+                stagger: 0.1,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+        }
+    });
 
-    if (isFirstLoad) {
-        sessionStorage.setItem("zenith_loaded", "true");
-        // Simulate a longer, premium cinematic first-load
-        gsap.to(".loader-char", {
-            y: "0%",
-            duration: 1,
-            stagger: 0.1,
-            ease: "expo.out",
-            delay: 0.2
+    let progress = 0;
+    
+    // --- 3D Particle Warp Logic (Three.js) ---
+    // Make sure THREE is available
+    if (typeof THREE === 'undefined') {
+        console.warn('Three.js not loaded, skipping 3D warp.');
+        return;
+    }
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x050505, 0.001); // Deep void fog
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.z = 1000;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    function resizeCanvas() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Create 3D particles
+    const numStars = 3000;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(numStars * 3);
+    const velocities = new Float32Array(numStars);
+
+    for (let i = 0; i < numStars; i++) {
+        positions[i * 3] = Math.random() * 2000 - 1000; // x
+        positions[i * 3 + 1] = Math.random() * 2000 - 1000; // y
+        positions[i * 3 + 2] = Math.random() * 2000 - 1000; // z
+        velocities[i] = 0;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    // Circular glowing particle material
+    const material = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 2.5,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+    });
+
+    const starCloud = new THREE.Points(geometry, material);
+    scene.add(starCloud);
+
+    let warpSpeed = 1;
+    let animationFrameId;
+
+    function animateStars() {
+        animationFrameId = requestAnimationFrame(animateStars);
+
+        const positions = starCloud.geometry.attributes.position.array;
+        
+        for (let i = 0; i < numStars; i++) {
+            velocities[i] += warpSpeed * 0.02; // Acceleration effect
+            const zSpeed = warpSpeed * 2 + velocities[i];
+            
+            positions[i * 3 + 2] += zSpeed; // Move towards camera
+
+            // If particle passes the camera, reset it far back
+            if (positions[i * 3 + 2] > 1000) {
+                positions[i * 3] = Math.random() * 2000 - 1000;
+                positions[i * 3 + 1] = Math.random() * 2000 - 1000;
+                positions[i * 3 + 2] = -1000;
+                velocities[i] = 0;
+            }
+        }
+
+        starCloud.geometry.attributes.position.needsUpdate = true;
+        
+        // Very subtle camera rotation for more dynamic feel
+        starCloud.rotation.z += 0.001;
+        
+        // Stretch particles on Z axis based on speed for warp streaks
+        // (Fake it by moving camera slightly or using a custom shader, but we'll stick to speed blur via speed)
+
+        renderer.render(scene, camera);
+    }
+    animateStars();
+    // ----------------------------------
+
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 3) + 1;
+        if (progress > 100) progress = 100;
+        gsap.to(progressBar, { width: `${progress}%`, duration: 0.1 });
+
+        // Ramp up warp speed dynamically as progress increases
+        gsap.to({s: warpSpeed}, {
+            s: 1 + (progress / 100) * 20, // Huge 3D acceleration
+            duration: 0.1,
+            onUpdate: function() { warpSpeed = this.targets()[0].s; }
         });
 
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 5) + 1;
-            if (progress > 100) progress = 100;
-            gsap.to(progressBar, { width: `${progress}%`, duration: 0.1 });
-
-            if (progress === 100) {
-                clearInterval(interval);
-                finishLoading();
-            }
-        }, 30);
-    } else {
-        // Quick transition from another page
-        gsap.set(".loader-char", { y: "0%" });
-        gsap.set(progressBar, { width: "100%" });
-        setTimeout(finishLoading, 400); // Short delay to let fonts/DOM render
-    }
+        if (progress === 100) {
+            clearInterval(interval);
+            // Engage 3D hyperdrive
+            gsap.to({s: warpSpeed}, {
+                s: 100, 
+                duration: 0.8,
+                ease: "power3.in",
+                onUpdate: function() { warpSpeed = this.targets()[0].s; }
+            });
+            setTimeout(finishLoading, 800);
+        }
+    }, 40);
 
     function finishLoading() {
         const tl = gsap.timeline({
             onComplete: () => {
                 overlay.style.pointerEvents = "none";
                 document.body.style.overflow = "";
-                // Dispatch event so specific pages can run their entrance animations (like Hero reveal)
-                window.dispatchEvent(new Event("zenith-loaded"));
             }
         });
 
         tl.to(loaderContent, {
             opacity: 0,
-            y: -30,
-            duration: 0.6,
-            ease: "power3.inOut"
+            scale: 1.2,
+            filter: "blur(10px)",
+            duration: 0.8,
+            ease: "power2.in"
         })
         .to(overlay, {
-            scaleY: 0,
-            transformOrigin: "top", // Slide UP to reveal the page
+            opacity: 0,
             duration: 1.2,
-            ease: "expo.inOut"
-        }, "-=0.2");
+            ease: "power2.inOut",
+            onStart: () => {
+                // Dispatch event here so hero animation starts smoothly while overlay dissolves
+                window.dispatchEvent(new Event("zenith-loaded"));
+            },
+            onComplete: () => {
+                cancelAnimationFrame(animationFrameId);
+                window.removeEventListener('resize', resizeCanvas);
+                // Clean up Three.js contexts
+                geometry.dispose();
+                material.dispose();
+                renderer.dispose();
+                overlay.remove(); // Remove overlay completely
+            }
+        }, "-=0.4");
     }
 
     // Intercept local links for exit transition

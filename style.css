@@ -1,11 +1,11 @@
 /* ROOT VARIABLES */
 :root {
-  --bg-color: #11111b;
-  --text-main: #cdd6f4;
-  --text-muted: #a6adc8;
-  --accent: #cba6f7;
-  --glass-bg: rgba(30, 30, 46, 0.6);
-  --glass-border: #313244;
+  --bg-color: #050505;
+  --text-main: #ffffff;
+  --text-muted: #888888;
+  --accent: #ffffff;
+  --glass-bg: rgba(15, 15, 15, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
   
   --font-sans: 'Outfit', sans-serif;
   --font-display: 'Syne', sans-serif;
@@ -35,6 +35,22 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* CUSTOM SCROLLBAR (MODERNIZED) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 /* Hide the native cursor on devices with a mouse/pointer */
 @media (pointer: fine) {
   * {
@@ -217,7 +233,7 @@ body.bw-active .hero-content {
 }
 
 body.bw-active .hero-title .char {
-  transform: translateY(0) !important;
+  transform: translateY(0);
 }
 
 .hero-subtitle {

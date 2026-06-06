@@ -78,13 +78,13 @@ magneticElements.forEach((elem) => {
     });
     
     gsap.to(cursor, { scale: 0, duration: 0.2 });
-    gsap.to(cursorRing, { scale: 1.8, borderColor: 'rgba(203, 166, 247, 0.5)', backgroundColor: 'rgba(203, 166, 247, 0.1)', duration: 0.3 });
+    gsap.to(cursorRing, { scale: 1.8, borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(255, 255, 255, 0.1)', duration: 0.3 });
   });
 
   elem.addEventListener('mouseleave', () => {
     gsap.to(elem, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
     gsap.to(cursor, { scale: 1, duration: 0.2 });
-    gsap.to(cursorRing, { scale: 1, borderColor: '#cba6f7', backgroundColor: 'transparent', duration: 0.3 });
+    gsap.to(cursorRing, { scale: 1, borderColor: '#ffffff', backgroundColor: 'transparent', duration: 0.3 });
   });
 });
 
@@ -93,22 +93,30 @@ magneticElements.forEach((elem) => {
 // ==========================================
 window.addEventListener("zenith-loaded", () => {
   const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle) heroTitle.style.overflow = 'visible';
 
-  const tl = gsap.timeline();
+  const tl = gsap.timeline({
+    delay: 0.6,
+    onComplete: () => {
+      if (heroTitle) heroTitle.style.overflow = 'visible';
+    }
+  });
   
   // Animate hero title characters
   tl.fromTo(".hero-title .char", 
     { y: "100%" }, 
     { y: "0%", stagger: 0.05, duration: 1.5, ease: "expo.out" }
   )
-  .to(".hero-subtitle, .scroll-indicator, .navbar", {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    stagger: 0.1,
-    ease: "power3.out"
-  }, "-=1");
+  .fromTo([".hero-subtitle", ".scroll-indicator", ".navbar"], 
+    { y: 20, opacity: 0 },
+    {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      stagger: 0.1,
+      ease: "power3.out"
+    }, 
+    "-=1"
+  );
 });
 
 // ==========================================
@@ -279,30 +287,57 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 // Hero Title Characters Hover Interaction
-const heroChars = document.querySelectorAll('.hero-title .char');
+function attachHeroHover() {
+  const heroChars = document.querySelectorAll('.hero-title .char');
+  
+  heroChars.forEach((char, index) => {
+    char.style.cursor = 'pointer';
 
-heroChars.forEach((char) => {
-  // We apply cursor pointer to individual letters for clarity
-  char.style.cursor = 'pointer';
-
-  char.addEventListener('mouseenter', () => {
+    // Passive in-text animation (Shimmer / Glow wave)
     gsap.to(char, {
-      y: "-15%",          // Moves the letter slightly up (proportional to font-size)
-      scale: 1.08,        // Slight scale up
-      duration: 1,
-      ease: "power4.out"
-    });
-  });
-
-  char.addEventListener('mouseleave', () => {
-    gsap.to(char, {
-      y: "0%",
-      scale: 1,
+      opacity: 0.5,
+      textShadow: "0px 0px 15px rgba(255,255,255,0.5)",
       duration: 1.5,
-      ease: "elastic.out(1, 0.75)" // Springy rebound matching the rest of the site
+      repeat: -1,
+      yoyo: true,
+      delay: index * 0.1,
+      ease: "sine.inOut"
+    });
+
+    char.addEventListener('mouseenter', () => {
+      gsap.to(char, {
+        y: "-15%",
+        scale: 1.08,
+        opacity: 1,
+        textShadow: "0px 0px 25px rgba(255,255,255,0.9)",
+        duration: 0.5,
+        ease: "power4.out",
+        overwrite: "auto" // Overrides the passive opacity/glow tween
+      });
+    });
+
+    char.addEventListener('mouseleave', () => {
+      gsap.to(char, {
+        y: "0%",
+        scale: 1,
+        duration: 1.5,
+        ease: "elastic.out(1, 0.75)",
+        onComplete: () => {
+          // Restart passive animation after elastic bounce
+          gsap.to(char, {
+            opacity: 0.5,
+            textShadow: "0px 0px 15px rgba(255,255,255,0.5)",
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+          });
+        }
+      });
     });
   });
-});
+}
+attachHeroHover();
 
 // ==========================================
 // TERMINAL TYPING ANIMATION
@@ -500,7 +535,7 @@ const originalSubtitleHTML = heroSubtitle ? heroSubtitle.innerHTML : '';
 const originalTitleHTML = heroTitle ? heroTitle.innerHTML : '';
 let isBWActive = false;
 
-const glitchWords = ['ZENITH', 'THANTHA', 'INSANE', 'LOWRES', 'RYUKO', 'GXM', 'I SEE YOU'];
+const glitchWords = ['ZENITH', 'THANTHA', 'INSANE', 'LOWRES', 'RYUKO', 'GXM', 'XLR8', 'I SEE YOU'];
 let currentWordIndex = 0;
 let glitchTimeout;
 let scrambleInterval;
@@ -533,6 +568,7 @@ function scrambleText(targetWord, duration = 500) {
       heroTitle.innerHTML = targetWord.split('').map(c => {
         return c === ' ' ? '<span class="char">&nbsp;</span>' : '<span class="char">' + c + '</span>';
       }).join('');
+      attachHeroHover(); // Reattach hover and passive animations to the new word
     }
   }, 50);
 }
@@ -572,6 +608,8 @@ if (themeSwitchBtn) {
         clearTimeout(glitchTimeout);
         clearInterval(scrambleInterval);
         heroTitle.innerHTML = originalTitleHTML;
+        gsap.set('.hero-title .char', { y: '0%' });
+        attachHeroHover();
       }
     }
   });
