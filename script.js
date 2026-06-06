@@ -89,66 +89,28 @@ magneticElements.forEach((elem) => {
 });
 
 // ==========================================
-// 4. LOADING SCREEN & HERO REVEAL
+// 4. LOADING SCREEN & HERO REVEAL (Hooked to page-transition.js)
 // ==========================================
-const loaderCounter = document.getElementById('loader-percent');
-let progress = 0;
-document.body.style.overflow = 'hidden';
+window.addEventListener("zenith-loaded", () => {
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) heroTitle.style.overflow = 'visible';
 
-// Initial Reveal of Loader Elements
-gsap.to(['.loader-counter', '.loader-label'], {
-  y: 0,
-  opacity: 1,
-  duration: 1,
-  stagger: 0.2,
-  ease: "power4.out"
+  const tl = gsap.timeline();
+  
+  // Animate hero title characters
+  tl.fromTo(".hero-title .char", 
+    { y: "100%" }, 
+    { y: "0%", stagger: 0.05, duration: 1.5, ease: "expo.out" }
+  )
+  .to(".hero-subtitle, .scroll-indicator, .navbar", {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    stagger: 0.1,
+    ease: "power3.out"
+  }, "-=1");
 });
 
-const interval = setInterval(() => {
-  progress += Math.floor(Math.random() * 8) + 2;
-  if (progress > 100) progress = 100;
-  
-  if (loaderCounter) {
-    loaderCounter.innerText = progress.toString().padStart(3, '0');
-  }
-
-  if (progress === 100) {
-    clearInterval(interval);
-    
-    const tl = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = '';
-        const heroTitle = document.querySelector('.hero-title');
-        if (heroTitle) heroTitle.style.overflow = 'visible';
-      }
-    });
-    
-    tl.to('.loader-wrapper', {
-      y: -50,
-      opacity: 0,
-      duration: 0.6,
-      ease: "power3.in"
-    })
-    .to('.loader-background', {
-      scaleY: 0,
-      transformOrigin: "top",
-      duration: 1,
-      ease: "expo.inOut"
-    }, "-=0.2")
-    .fromTo(".hero-title .char", 
-      { y: "100%" }, 
-      { y: "0%", stagger: 0.05, duration: 1.5, ease: "expo.out" },
-      "-=0.5"
-    )
-    .to(".hero-subtitle, .scroll-indicator, .navbar", {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      stagger: 0.1,
-      ease: "power3.out"
-    }, "-=1");
-  }
-}, 40);
 // ==========================================
 // ABOUT STATS ANIMATIONS
 // ==========================================
