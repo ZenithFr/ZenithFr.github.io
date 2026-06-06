@@ -9,6 +9,15 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    cursor: default !important;
+}
+
+/* Reset cursor for all elements inside OS body */
+.os-body * {
+    cursor: default !important;
+}
+.os-body a, .os-body button, .os-body .file-item, .os-body .sidebar li {
+    cursor: pointer !important;
 }
 
 .desktop-environment {
@@ -170,6 +179,7 @@
     color: var(--text-color, #fff);
     transition: 0.2s;
     border: 1px solid transparent;
+    cursor: pointer !important;
 }
 
 .file-item:hover {

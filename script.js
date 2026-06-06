@@ -523,148 +523,207 @@ document.addEventListener('DOMContentLoaded', () => {
         duration: 0.9,
         stagger: 0.015,
         ease: 'power4.out'
+      ease: "power4.out"
+    });
+  });
+
+  char.addEventListener('mouseleave', () => {
+    gsap.to(char, {
+      y: "0%",
+      scale: 1,
+      duration: 1.5,
+      ease: "elastic.out(1, 0.75)" // Springy rebound matching the rest of the site
+    });
+  });
+});
+
+// ==========================================
+// TERMINAL TYPING ANIMATION
+// ==========================================
+const terminalSequences = [
+  { type: 'command', text: 'neofetch', delay: 800 },
+  { type: 'output', text: `<span class="text-accent"><b>zenith@zenesis</b></span>
+<span class="text-muted">--------------</span>
+<span class="text-info">OS</span>: Arch Linux x86_64
+<span class="text-info">Host</span>: Zenesis Custom Build
+<span class="text-info">Kernel</span>: 6.6.10-arch1-1
+<span class="text-info">Uptime</span>: 42 days, 13 hours
+<span class="text-info">Packages</span>: 1337 (pacman)
+<span class="text-info">Shell</span>: zsh 5.9
+<span class="text-info">WM</span>: Hyprland
+<span class="text-info">Terminal</span>: kitty
+<span class="text-info">CPU</span>: AMD Ryzen 9 7950X (32) @ 5.700GHz
+<span class="text-info">GPU</span>: NVIDIA GeForce RTX 4090
+<span class="text-info">Memory</span>: 16384MiB / 64318MiB`, delay: 1500 },
+  { type: 'command', text: 'docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}"', delay: 1000 },
+  { type: 'output', text: `<span class="text-muted">NAMES               STATUS              PORTS</span>
+zenith-dns-pihole   Up 12 days          53/udp, 80/tcp
+hermes-tasks-brain  Up 4 days (healthy)  8000/tcp -> 80
+antigravity-coder   Up 18 hours         9000/tcp -> 9000
+docker-proxy-nginx  Up 12 days          80/tcp -> 80, 443/tcp`, delay: 1500 },
+  { type: 'command', text: 'echo "Ready to build the future."', delay: 1000 },
+  { type: 'output', text: `<span class="text-success">Ready to build the future.</span>`, delay: 4000 }
+];
+
+function startTerminalAnimation() {
+  const terminalBody = document.getElementById('terminal-body');
+  if (!terminalBody) return;
+  
+  if (window.terminalIsRunning) return;
+  window.terminalIsRunning = true;
+  
+  terminalBody.innerHTML = '';
+  let seqIndex = 0;
+  
+  function runSequence() {
+    if (!window.terminalAnimated) return;
+    
+    if (seqIndex >= terminalSequences.length) {
+      setTimeout(() => {
+        if (!window.terminalAnimated) return;
+        terminalBody.innerHTML = '';
+        seqIndex = 0;
+        runSequence();
+      }, 3000);
+      return;
+    }
+    
+    const seq = terminalSequences[seqIndex];
+    
+    if (seq.type === 'command') {
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      line.innerHTML = `<span class="prompt">zenith@zenesis:~$ </span><span class="command-text"></span><span class="cursor-blink">|</span>`;
+      terminalBody.appendChild(line);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      
+      const cmdTextSpan = line.querySelector('.command-text');
+      const cursorSpan = line.querySelector('.cursor-blink');
+      
+      let charIndex = 0;
+      const cmdText = seq.text;
+      
+      function typeChar() {
+        if (!window.terminalAnimated) return;
+        if (charIndex < cmdText.length) {
+          cmdTextSpan.textContent += cmdText[charIndex];
+          charIndex++;
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+          setTimeout(typeChar, Math.random() * 40 + 15);
+        } else {
+          cursorSpan.remove();
+          seqIndex++;
+          setTimeout(runSequence, seq.delay);
+        }
+      }
+      
+      setTimeout(typeChar, 300);
+    } else if (seq.type === 'output') {
+      const line = document.createElement('div');
+      line.className = 'terminal-output';
+      line.innerHTML = seq.text;
+      terminalBody.appendChild(line);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      
+      seqIndex++;
+      setTimeout(runSequence, seq.delay);
+    }
+  }
+  
+  runSequence();
+}
+
+ScrollTrigger.create({
+  trigger: "#lab",
+  start: "top 80%",
+  onEnter: () => {
+    if (!window.terminalAnimated) {
+      window.terminalAnimated = true;
+      startTerminalAnimation();
+    }
+  }
+});
+
+// ==========================================
+// ADVANCED TEXT REVEAL (Synapser Studio Style)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait slightly to ensure fonts are loaded so SplitType calculates widths correctly
+  setTimeout(() => {
+    // Basic element fade-ins (cards, numbers) - excluding link cards for a custom animation
+    const sections = document.querySelectorAll('.section');
+    sections.forEach((sec) => {
+      gsap.from(sec.querySelectorAll('.section-num, .glass-card:not(.about-text):not(.lab-info):not(.link-card)'), {
+        scrollTrigger: {
+          trigger: sec,
+          start: "top 75%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out"
+      });
+    });
+
+    // Unique Blur-In Animation for "My Links" Cards
+    const linkCards = document.querySelectorAll('.link-card');
+    if (linkCards.length > 0) {
+      gsap.fromTo(linkCards, 
+        { 
+          opacity: 0, 
+          y: 60, 
+          filter: "blur(20px)" 
+        },
+        {
+          scrollTrigger: {
+            trigger: "#links",
+            start: "top 40%",
+          },
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+          stagger: 0.2,
+          ease: "power4.out"
+        }
+      );
+    }
+
+    // Advanced Text Reveal for typography
+    const revealElements = document.querySelectorAll('.section-title, .about-text p, .lab-info p, .contact-box p');
+    
+    revealElements.forEach((el) => {
+      // Split text into lines, words, and chars
+      const split = new SplitType(el, { types: 'lines, words, chars' });
+      
+      // Wrap each line in a hidden overflow container to create the "reveal from bottom" mask
+      split.lines.forEach(line => {
+        const wrapper = document.createElement('div');
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.display = 'block'; // Ensure block formatting context
+        line.parentNode.insertBefore(wrapper, line);
+        wrapper.appendChild(line);
+      });
+
+      // Animate the characters up and rotate slightly for a cinematic, premium feel
+      gsap.from(split.chars, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+        },
+        y: '100%',
+        rotationZ: 3,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.015,
+        ease: 'power4.out'
       });
     });
   }, 100);
 });
 
 // ==========================================
-// 10. HERMES SKILLS MARKETPLACE DYNAMIC GENERATOR
-// ==========================================
-// Renders the skill cards and handles JSZip compression & download
-const marketplaceGrid = document.getElementById('skills-grid');
-if (marketplaceGrid) {
-  const skills = [
-    { id: 'ares-persona', icon: 'fa-solid fa-brain', files: ['SKILL.md', 'references/audit-log.md'] },
-    { id: 'audit-approval-bypass', icon: 'fa-solid fa-shield-halved', files: ['SKILL.md', 'references/audit-guide.md'] },
-    { id: 'audit-mcp', icon: 'fa-solid fa-shield', files: ['SKILL.md', 'references/audit-checklist.md'] },
-    { id: 'coinmaxxing', icon: 'fa-solid fa-coins', files: ['SKILL.md'] },
-    { id: 'docker-management', icon: 'fa-brands fa-docker', files: ['SKILL.md'] },
-    { id: 'duckduckgo-search', icon: 'fa-solid fa-magnifying-glass', files: ['SKILL.md', 'scripts/duckduckgo.sh'] },
-    { id: 'hermes-agent', icon: 'fa-solid fa-robot', files: ['SKILL.md', 'references/fallback-providers.md', 'references/optimization-guide.md'] },
-    { id: 'hermes-gateway-deploy', icon: 'fa-solid fa-bolt', files: ['SKILL.md'] },
-    { id: 'hermes-local-auxiliary', icon: 'fa-solid fa-microchip', files: ['SKILL.md', 'references/freellmapi-integration.md', 'references/hermes-aux-config.md', 'references/model-switching-workflow.md', 'references/server-config.md'] },
-    { id: 'hermes-skin-authoring', icon: 'fa-solid fa-terminal', files: ['SKILL.md'] },
-    { id: 'lonepirate', icon: 'fa-solid fa-skull-crossbones', files: ['SKILL.md'] }
-  ];
-
-  skills.forEach(skill => {
-    const title = skill.id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    
-    const card = document.createElement('div');
-    card.className = 'skill-card magnetic';
-    card.setAttribute('data-strength', '5');
-    card.innerHTML = `
-      <div class="skill-header">
-        <div class="skill-icon">
-          <i class="${skill.icon} fa-fw fa-xl"></i>
-        </div>
-        <div class="skill-info">
-          <h3>${title}</h3>
-          <p>pkg: ${skill.id}</p>
-        </div>
-      </div>
-      <div class="skill-actions">
-        <button class="btn-download" onclick="downloadSkillAsZip(this, '${skill.id}')">
-          <i class="fa-solid fa-download"></i> Download Zip
-        </button>
-      </div>
-    `;
-    marketplaceGrid.appendChild(card);
-    
-    // 3D Isometric Tilt Matrix
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const rotateX = ((y - centerY) / centerY) * -8;
-      const rotateY = ((x - centerX) / centerX) * 8;
-      
-      gsap.to(card, {
-        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`,
-        duration: 0.4,
-        ease: "power2.out"
-      });
-    });
-    
-    card.addEventListener('mouseleave', () => {
-      gsap.to(card, {
-        transform: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
-        duration: 0.6,
-        ease: "elastic.out(1, 0.3)"
-      });
-    });
-  });
-
-  window.downloadSkillAsZip = function(btn, skillKey) {
-    if (btn.classList.contains('downloading')) return;
-    
-    const skill = skills.find(s => s.id === skillKey);
-    if (!skill) return;
-    const files = skill.files;
-    const card = btn.closest('.skill-card');
-
-    // Structural dissolve micro-animation on card
-    gsap.to(card.querySelectorAll('.skill-info, .skill-icon'), {
-      opacity: 0.3,
-      filter: 'blur(4px)',
-      y: 10,
-      duration: 0.4,
-      ease: 'power2.in'
-    });
-
-    const originalHtml = btn.innerHTML;
-    btn.classList.add('downloading');
-    btn.innerHTML = `<div class="dl-progress-bar"></div><span class="dl-text">Compiling 0%</span>`;
-    const progressBar = btn.querySelector('.dl-progress-bar');
-    const progressText = btn.querySelector('.dl-text');
-
-    // Offload heavy JSZip computation to a dedicated Web Worker file
-    // This avoids opaque Blob URL security restrictions in some browsers
-    const worker = new Worker('worker.js');
-
-    worker.onmessage = function(e) {
-      if (e.data.type === 'progress') {
-        const percent = Math.floor(e.data.percent);
-        gsap.to(progressBar, { width: `${percent}%`, duration: 0.1 });
-        progressText.innerText = `Compiling ${percent}%`;
-      } else if (e.data.type === 'done') {
-        window.saveAs(e.data.content, `${skillKey}.zip`);
-        cleanup(true);
-      } else if (e.data.type === 'error') {
-        console.error('Download failed:', e.data.error);
-        alert('Failed to compile files.');
-        cleanup(false);
-      }
-    };
-
-    function cleanup(success) {
-      worker.terminate();
-      btn.innerHTML = success ? '<i class="fa-solid fa-check"></i> Complete' : originalHtml;
-      
-      gsap.to(card.querySelectorAll('.skill-info, .skill-icon'), {
-        opacity: 1,
-        filter: 'blur(0px)',
-        y: 0,
-        duration: 0.5,
-        ease: 'power3.out'
-      });
-      
-      setTimeout(() => {
-        btn.classList.remove('downloading');
-        btn.innerHTML = originalHtml;
-      }, 2000);
-    }
-
-    // Safely calculate the absolute base URL based on the current page's origin to avoid Blob URL CORS mapping issues
-    const baseUrl = new URL('../assets/lab/hermes-skills/', window.location.href).href;
-    worker.postMessage({ skillKey, files, baseUrl });
-  };
-}
 
 // ==========================================
 // THEME SWITCH LOGIC
@@ -750,5 +809,37 @@ if (themeSwitchBtn) {
         heroTitle.innerHTML = originalTitleHTML;
       }
     }
+  });
+}
+
+// ==========================================
+// MOBILE MENU TOGGLE
+// ==========================================
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const navMenu = document.getElementById('nav-menu');
+const navItems = document.querySelectorAll('.nav-item');
+
+if (mobileMenuBtn && navMenu) {
+  mobileMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    const icon = mobileMenuBtn.querySelector('i');
+    if (navMenu.classList.contains('active')) {
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-xmark');
+    } else {
+      icon.classList.remove('fa-xmark');
+      icon.classList.add('fa-bars');
+    }
+  });
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navMenu.classList.remove('active');
+      const icon = mobileMenuBtn.querySelector('i');
+      if (icon) {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      }
+    });
   });
 }
